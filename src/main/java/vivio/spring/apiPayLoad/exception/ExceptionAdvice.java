@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestControllerAdvice(annotations = {RestController.class})
-public class ExceptionAdvice extends ResponseEntityExceptionHandler {
+public class ExceptionAdvice extends ResponseEntityExceptionHandler{
 
 
     @org.springframework.web.bind.annotation.ExceptionHandler
@@ -37,9 +37,8 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
 
-    @Override
-    public ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+    public ResponseEntity<Object> handleMethodArgumentNotValid (MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         Map<String, String> errors = new LinkedHashMap<>();
 

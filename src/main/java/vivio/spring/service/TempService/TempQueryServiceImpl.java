@@ -1,8 +1,11 @@
 package vivio.spring.service.TempService;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import vivio.spring.apiPayLoad.code.status.ErrorStatus;
 import vivio.spring.apiPayLoad.exception.handler.TempHandler;
-
+@Service
+@RequiredArgsConstructor
 public class TempQueryServiceImpl implements TempQueryService {
     @Override
     public void CheckFlag(Integer flag){
