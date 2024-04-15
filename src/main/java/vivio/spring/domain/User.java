@@ -2,18 +2,20 @@ package vivio.spring.domain;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import vivio.spring.domain.common.BaseEntity;
 import vivio.spring.domain.enums.Gender;
 import vivio.spring.domain.enums.Platform;
 
 @Entity
 @Getter
+@Setter
+@DynamicUpdate
+@DynamicInsert
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class User extends BaseEntity {
     @Id
