@@ -22,8 +22,10 @@ public enum ErrorStatus implements BaseErrorCode {
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
     // ~~~ 관련 응답 ....
     //For test
-    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST,"TEMP4001","이거는 테스트");
+    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST,"TEMP4001","이거는 테스트"),
 
+    EMAIL_EXCEPTION(HttpStatus.BAD_REQUEST, "USER4001","인증번호가 일치 하지 않습니다."),
+    USER_EXCEPTION(HttpStatus.BAD_REQUEST, "USER4002","비밀번호가 일치 하지 않습니다");
 
     private final HttpStatus httpStatus;
     private final String code;
