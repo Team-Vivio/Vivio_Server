@@ -29,7 +29,7 @@ public class UserRestController {
 
     @PostMapping("/siginup")
     public ApiResponse<UserResponseDTO.JoinResultDTO> join(@RequestBody @Valid UserRequestDTO.JoinDto request){
-        logger.info("Received join request with data: {}", request);
+
         log.info(request.getName());
         User user =userCommandService.joinUser(request);
         log.info(user.getName());

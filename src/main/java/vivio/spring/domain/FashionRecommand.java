@@ -12,13 +12,14 @@ import vivio.spring.domain.enums.Type;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Setter
 public class FashionRecommand extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private float height;
     private float weight;
-    private String image;
+
     @Enumerated(EnumType.STRING)
     private Type type;
     @Enumerated(EnumType.STRING)

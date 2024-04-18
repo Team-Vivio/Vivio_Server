@@ -14,6 +14,7 @@ public class FashionBottom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="fashionRecommand")
     private FashionRecommand fashionRecommand;
@@ -24,4 +25,6 @@ public class FashionBottom {
     @JoinColumn(name="type")
     private FashionType type;
     private String content;
+    private String image;
+    private String link;
 }
