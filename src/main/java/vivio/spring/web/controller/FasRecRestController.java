@@ -10,6 +10,7 @@ import vivio.spring.converter.FasRecConverter;
 import vivio.spring.domain.FashionRecommand;
 import vivio.spring.domain.mapping.FashionBottom;
 import vivio.spring.domain.mapping.FashionTop;
+import vivio.spring.repository.FasRecRepository;
 import vivio.spring.service.FasRecService.FasRecCommandService;
 import vivio.spring.service.FasRecService.FasRecQueryService;
 import vivio.spring.web.dto.FasRecResponseDTO;
@@ -36,13 +37,12 @@ public class FasRecRestController {
        return ApiResponse.onSuccess(FasRecConverter.toJoinResultDTO(fashionRecommand));
     }
     @GetMapping("fashionRecommand")
-    public ApiResponse<FasRecResponseDTO.JoinResultDTO> get(@RequestHeader("Authorization") String token){
+    public ApiResponse<FasRecResponseDTO.ViewAllResultDTO> get(@RequestHeader("Authorization") String token){
         Long userId = tokenProvider.getUserIdFromToken(token);
-        List<FashionRecommand> fashionRecommandList = fasRecQueryService.ViewFasRecList(userId);
-        List<FashionTop> fashionTopList = fasRecQueryService.ViewFasTopList(userId);
-        List<FashionBottom> fashionBottomList =fasRecQueryService.ViewFassBottomList(userId);
-        return ApiResponse.onSuccess(FasRecConverter.toViewResultDTO(fashionRecommandList,fashionTopList, fashionBottomList));
-        return null;
+        List<FasRecResponseDTO.ViewListResultDTO> fashionRecommandList = fasRecQueryService.ViewFasRecList(userId);
+
+        return ApiResponse.onSuccess(FasRecConverter.toViewAllResultDTO(fashionRecommandList));
+
     }
 
 }

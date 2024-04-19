@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class FasRecResponseDTO {
     @Builder
@@ -15,5 +16,22 @@ public class FasRecResponseDTO {
     public static class JoinResultDTO{
         Long fasRecId;
         LocalDateTime createdAt;
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ViewListResultDTO{
+        Long fasRecId;
+        String image;
+        String link;
+        String type;
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ViewAllResultDTO{
+        List<ViewListResultDTO> viewListResultDTOS;
     }
 }

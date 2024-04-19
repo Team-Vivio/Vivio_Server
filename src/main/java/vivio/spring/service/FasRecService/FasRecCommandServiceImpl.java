@@ -3,6 +3,7 @@ package vivio.spring.service.FasRecService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import vivio.spring.converter.FasRecConverter;
 import vivio.spring.converter.UserConverter;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Repository
 @org.springframework.transaction.annotation.Transactional(readOnly = true)
 public class FasRecCommandServiceImpl implements FasRecCommandService{
     private final UserRepository userRepository;

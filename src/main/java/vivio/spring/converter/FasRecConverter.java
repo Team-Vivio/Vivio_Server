@@ -15,6 +15,7 @@ import vivio.spring.web.dto.UserRequestDTO;
 import vivio.spring.web.dto.UserResponseDTO;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static ch.qos.logback.classic.spi.ThrowableProxyVO.build;
 
@@ -31,13 +32,13 @@ public class FasRecConverter {
         }
         switch (request.getType()) {
             case 1:
-                type = Type.SLIM;
+                type = Type.slim;
                 break;
             case 2:
-                type = Type.NORMAL;
+                type = Type.normal;
                 break;
             case 3:
-                type = Type.FAT;
+                type = Type.fat;
                 break;
         }
 
@@ -71,6 +72,19 @@ public class FasRecConverter {
         return FasRecResponseDTO.JoinResultDTO.builder()
                 .fasRecId(fashionRecommand.getId())
                 .createdAt(fashionRecommand.getCreatedAt())
+                .build();
+    }
+    public static FasRecResponseDTO.ViewListResultDTO toViewListResultDTO(FashionRecommand fashionRecommand,String image, String link, String type){
+        return FasRecResponseDTO.ViewListResultDTO.builder()
+                .fasRecId(fashionRecommand.getId())
+                .image(image)
+                .link(link)
+                .type(type)
+                .build();
+    }
+    public static FasRecResponseDTO.ViewAllResultDTO toViewAllResultDTO(List<FasRecResponseDTO.ViewListResultDTO> fashions){
+        return FasRecResponseDTO.ViewAllResultDTO.builder()
+                .viewListResultDTOS(fashions)
                 .build();
     }
 }
