@@ -16,4 +16,7 @@ public interface FasRecQueryService {
     List<FasRecResponseDTO.ViewListResultDTO> ViewFasRecList(Long userId);
 
 
+    FashionRecommand ViewFasRec(Long id);
+
+    FasRecResponseDTO.ViewResultDTO ViewFasRecResult(FashionRecommand fashionRecommand);
 }

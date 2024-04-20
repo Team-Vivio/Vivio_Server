@@ -19,8 +19,7 @@ public class FasRecRequestDTO {
         private float height;
         private float weight;
         private int type;
-        private String image;
-        private String link;
+
         private List<FasTopJoinDTO> fashionTops;
         private List<FasBottomJoinDTO> fashionBottoms;
 
@@ -41,6 +40,14 @@ public class FasRecRequestDTO {
         private String content;
         private String color;
         private String type;
+    }
+    @Getter
+    @Setter
+    public static class FasRecCreateDTO{
+        private int gender;
+        private float height;
+        private float weight;
+        private int type;
     }
 
 }

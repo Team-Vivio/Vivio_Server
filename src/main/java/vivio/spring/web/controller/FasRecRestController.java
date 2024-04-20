@@ -3,7 +3,10 @@ package vivio.spring.web.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.parser.ParseException;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import vivio.spring.apiPayLoad.ApiResponse;
 import vivio.spring.config.TokenProvider;
 import vivio.spring.converter.FasRecConverter;
@@ -16,6 +19,9 @@ import vivio.spring.service.FasRecService.FasRecQueryService;
 import vivio.spring.web.dto.FasRecResponseDTO;
 import vivio.spring.web.dto.FasRecRequestDTO;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -29,7 +35,7 @@ public class FasRecRestController {
     private final TokenProvider tokenProvider;
     @PostMapping("fashionRecommand")
     public ApiResponse<FasRecResponseDTO.JoinResultDTO> join(@RequestBody @Valid FasRecRequestDTO.JoinDTO request, @RequestHeader("Authorization") String token){
-        log.info(request.getImage());
+
         Long userId = tokenProvider.getUserIdFromToken(token);
         log.info(String.valueOf(userId));
         FashionRecommand fashionRecommand= fasRecCommandService.JoinFasRec(userId,request);
@@ -44,5 +50,25 @@ public class FasRecRestController {
         return ApiResponse.onSuccess(FasRecConverter.toViewAllResultDTO(fashionRecommandList));
 
     }
+    @GetMapping("/fashionRecommand/{fashionRecommandId}")
+    public ApiResponse<FasRecResponseDTO.ViewResultDTO> getFashion(@PathVariable("fashionRecommandId") Long id){
+        FashionRecommand fashionRecommand = fasRecQueryService.ViewFasRec(id);
 
+        return ApiResponse.onSuccess(fasRecQueryService.ViewFasRecResult(fashionRecommand));
+    }
+    @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ApiResponse<FasRecResponseDTO.CreateResultDTO> createFashion(@RequestPart(value ="request", required = true) @Valid FasRecRequestDTO.FasRecCreateDTO request, @RequestPart(value="image",required = false) @Valid MultipartFile file){
+        try{
+            byte[] bytes =file.getBytes();
+            String base64Encoded = Base64.getEncoder().encodeToString(bytes);
+            FasRecResponseDTO.CreateResultDTO fashion=fasRecCommandService.CreateFasRec(request,base64Encoded);
+            return ApiResponse.onSuccess(fashion);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package vivio.spring.converter;
 
+import org.json.simple.JSONObject;
 import vivio.spring.domain.FashionColor;
 import vivio.spring.domain.FashionRecommand;
 import vivio.spring.domain.FashionType;
@@ -85,6 +86,68 @@ public class FasRecConverter {
     public static FasRecResponseDTO.ViewAllResultDTO toViewAllResultDTO(List<FasRecResponseDTO.ViewListResultDTO> fashions){
         return FasRecResponseDTO.ViewAllResultDTO.builder()
                 .viewListResultDTOS(fashions)
+                .build();
+    }
+    public static FasRecResponseDTO.ViewFashionTopDTO toViewFashionTopDTO(FashionTop fashionTop, String color, String type){
+        return FasRecResponseDTO.ViewFashionTopDTO.builder()
+                .color(color)
+                .type(type)
+                .content(fashionTop.getContent())
+                .image(fashionTop.getImage())
+                .link(fashionTop.getLink())
+                .build();
+    }
+    public static FasRecResponseDTO.ViewFashionBottomDTO toViewFashionBottomDTO(FashionBottom fashionBottom, String color, String type){
+        return FasRecResponseDTO.ViewFashionBottomDTO.builder()
+                .color(color)
+                .type(type)
+                .content(fashionBottom.getContent())
+                .image(fashionBottom.getImage())
+                .link(fashionBottom.getLink())
+                .build();
+    }
+    public static FasRecResponseDTO.ViewResultDTO toViewResultDTO(FashionRecommand fashionRecommand, List<FasRecResponseDTO.ViewFashionBottomDTO> fashionBottomDTOS,List<FasRecResponseDTO.ViewFashionTopDTO> fashionTopDTOS) {
+        return FasRecResponseDTO.ViewResultDTO.builder()
+                .fasRecId(fashionRecommand.getId())
+                .fashionTops(fashionTopDTOS)
+                .fashionBottoms(fashionBottomDTOS)
+
+                .build();
+    }
+    public static FasRecResponseDTO.NaverItemDTO toItem(JSONObject item){
+        return FasRecResponseDTO.NaverItemDTO.builder()
+                .title(item.get("title").toString())
+                .image(item.get("image").toString())
+                .link(item.get("link").toString())
+
+                .build();
+    }
+    public static FasRecResponseDTO.ViewFashionTopDTO toFashionTopDTO(JSONObject fashionTop, FasRecResponseDTO.NaverItemDTO item){
+        return  FasRecResponseDTO.ViewFashionTopDTO.builder()
+                .type(fashionTop.get("type").toString())
+                .color(fashionTop.get("color").toString())
+                .content(fashionTop.get("content").toString())
+                .image(item.getImage())
+                .link(item.getLink())
+                .build();
+    }
+     public static FasRecResponseDTO.ViewFashionBottomDTO toFashionBottomDTO(JSONObject fashionBottom, FasRecResponseDTO.NaverItemDTO item){
+        return  FasRecResponseDTO.ViewFashionBottomDTO.builder()
+                .type(fashionBottom.get("type").toString())
+                .color(fashionBottom.get("color").toString())
+                .content(fashionBottom.get("content").toString())
+                .image(item.getImage())
+                .link(item.getLink())
+                .build();
+    }
+    public static FasRecResponseDTO.CreateResultDTO toCreateResultDTO(Gender gender, Type type, float height, float weight ,List<FasRecResponseDTO.ViewFashionTopDTO> fashionTops,List<FasRecResponseDTO.ViewFashionBottomDTO>fashionBottoms){
+        return FasRecResponseDTO.CreateResultDTO.builder()
+                .gender(gender)
+                .type(type)
+                .height(height)
+                .weight(weight)
+                .fashionTopDTOS(fashionTops)
+                .fashionBottomDTOS(fashionBottoms)
                 .build();
     }
 }

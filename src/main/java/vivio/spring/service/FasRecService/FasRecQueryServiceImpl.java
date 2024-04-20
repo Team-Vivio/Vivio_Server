@@ -61,5 +61,43 @@ public class FasRecQueryServiceImpl implements FasRecQueryService {
 
         return fashionList;
     }
+    @Override
+    public FashionRecommand ViewFasRec(Long id){
+        Optional<FashionRecommand> fashionRecommandOptional =fasRecRepository.findById(id);
+        if(fashionRecommandOptional.isPresent()) {
+            FashionRecommand fashionRecommand = fashionRecommandOptional.get();
+            return fashionRecommand;
+        }else{
+            return null;
+        }
+
+    }
+    @Override
+    public FasRecResponseDTO.ViewResultDTO ViewFasRecResult(FashionRecommand fashionRecommand){
+       List<FashionTop> fashionTops=fasTopRepository.findAllByFashionRecommandId(fashionRecommand.getId());
+       List<FashionBottom> fashionBottoms=fasBottomRepository.findAllByFashionRecommandId(fashionRecommand.getId());
+       List<FasRecResponseDTO.ViewFashionTopDTO> fashionTopDTOS=fashionTops.stream()
+               .map(fashionTop -> {
+                   String type = fashionTop.getType().getName();
+                   String color = fashionTop.getColor().getName();
+                   return FasRecConverter.toViewFashionTopDTO(fashionTop,type,color);
+
+                    }
+
+               )
+               .collect(Collectors.toList());
+       List<FasRecResponseDTO.ViewFashionBottomDTO> fashionBottomDTOS=fashionBottoms.stream()
+               .map(fashionBottom -> {
+                   String type = fashionBottom.getType().getName();
+                   String color = fashionBottom.getColor().getName();
+                   return FasRecConverter.toViewFashionBottomDTO(fashionBottom,type,color);
+
+                   }
+               )
+               .collect(Collectors.toList());
+       return FasRecConverter.toViewResultDTO(fashionRecommand,fashionBottomDTOS,fashionTopDTOS);
+
+
+    }
 
 }
