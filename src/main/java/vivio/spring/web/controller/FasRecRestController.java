@@ -59,8 +59,13 @@ public class FasRecRestController {
     @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ApiResponse<FasRecResponseDTO.CreateResultDTO> createFashion(@RequestPart(value ="request", required = true) @Valid FasRecRequestDTO.FasRecCreateDTO request, @RequestPart(value="image",required = false) @Valid MultipartFile file){
         try{
-            byte[] bytes =file.getBytes();
-            String base64Encoded = Base64.getEncoder().encodeToString(bytes);
+            String base64Encoded;
+            if(!file.isEmpty()) {
+                byte[] bytes = file.getBytes();
+                base64Encoded = Base64.getEncoder().encodeToString(bytes);
+            }else{
+                base64Encoded=null;
+            }
             FasRecResponseDTO.CreateResultDTO fashion=fasRecCommandService.CreateFasRec(request,base64Encoded);
             return ApiResponse.onSuccess(fashion);
         } catch (IOException e) {

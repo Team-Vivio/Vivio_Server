@@ -145,18 +145,21 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
     @Override
     @Transactional
     public FasRecResponseDTO.CreateResultDTO CreateFasRec(FasRecRequestDTO.FasRecCreateDTO request, String image) throws MessagingException, IOException, ParseException {
-
+        Double fatPercent;
         WebClient webClient = WebClient.builder().baseUrl("http://www.fitimage.io/api/api_fat_predict/").build();
         WebClient gptWebClient = WebClient.builder().baseUrl(openAiUrl).build();
-
+        String genderName=null;
         Gender gender = null;
         Type type = null;
         switch (request.getGender()){
             case 1:
                 gender = Gender.male;
+                genderName="남성";
                 break;
             case 2:
                 gender = Gender.female;
+                genderName="여성";
+                break;
         }
          switch (request.getType()) {
             case 1:
@@ -169,17 +172,21 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
                 type = Type.fat;
                 break;
         }
-        Map<String , Object> bodyMap = new HashMap<>();
-        bodyMap.put("image", image);
-        bodyMap.put("gender", gender);
-        bodyMap.put("token",fitToken);
-        Mono<Double> fatPercentage = webClient.post()
-                .bodyValue(bodyMap)
-                .retrieve()
-                .bodyToMono(String.class)
-                .map(jsonString -> parseFatFromJson(jsonString));
-        //체지방률 받아옴
-        Double fatPercent = fatPercentage.block();
+        if(image!= null) {
+            Map<String, Object> bodyMap = new HashMap<>();
+            bodyMap.put("image", image);
+            bodyMap.put("gender", gender);
+            bodyMap.put("token", fitToken);
+            Mono<Double> fatPercentage = webClient.post()
+                    .bodyValue(bodyMap)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .map(jsonString -> parseFatFromJson(jsonString));
+            //체지방률 받아옴
+            fatPercent = fatPercentage.block();
+        }else{
+            fatPercent = null;
+        }
 
         //GPT 사용
         String systemPrompt ="If you provide the following information, analyze the user's body type into one, recommend the type and color of the clothes, and present the information in JSON form. The body type in the request is one of slim, normal, and fat selected by the user. FatPercent may or may not be valuable as body fat percentage. The first thing to consider when analyzing body type is BMI, followed by body fat percentage.\n" +
@@ -241,19 +248,20 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
         //네이버 쇼핑 사용
         RestTemplate rest= new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Naver-Client-Id",naverClientId);
-        headers.add("X-Naver-Client-Secret",naverClientSecret);
+        headers.set("X-Naver-Client-Id",naverClientId);
+        headers.set("X-Naver-Client-Secret",naverClientSecret);
         String body="";
 
-        HttpEntity<String> requestEntity = new HttpEntity<String>(body,headers);
-        //현재 네이버 쇼핑 api 호출 에러 이건 추후 아님 틈틈히 할예쩡
+        HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
+        String finalGenderName = genderName;
+        //현재 네이버 쇼핑 api 호출 에러 이건 추후 아님 틈틈히 할예정
         //상의 추천 반복해서 쇼핑몰 매핑
         List<FasRecResponseDTO.ViewFashionTopDTO> createFashionTopResultDTOS= (List<FasRecResponseDTO.ViewFashionTopDTO>) fashionTops.stream()
                 .map(fahsionTop ->{
                     JSONObject fashionTopObject=(JSONObject) fahsionTop;
                     log.info(String.valueOf(headers.get("X-Naver-Client-Id")));
                      ResponseEntity<String> responseEntity =
-                        rest.exchange("https://openapi.naver.com/v1/search/shop.json?query="+fashionTopObject.get("color")+" "+fashionTopObject.get("type"),
+                        rest.exchange("https://openapi.naver.com/v1/search/shop.json?query="+finalGenderName +" "+fashionTopObject.get("color")+" "+fashionTopObject.get("type"),
                                 HttpMethod.GET, requestEntity, String.class);
                     HttpStatus httpStatus = (HttpStatus) responseEntity.getStatusCode();
                     int status=httpStatus.value();
@@ -270,11 +278,12 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
 
                 }).collect(Collectors.toList());
         //하의 추천 반복해서 쇼핑몰 매핑
-         List<FasRecResponseDTO.ViewFashionBottomDTO> createFashionBottomResultDTOS= (List<FasRecResponseDTO.ViewFashionBottomDTO>) fashionBottoms.stream()
+
+        List<FasRecResponseDTO.ViewFashionBottomDTO> createFashionBottomResultDTOS= (List<FasRecResponseDTO.ViewFashionBottomDTO>) fashionBottoms.stream()
                 .map(fahsionBottom ->{
                     JSONObject fashionBottomObject=(JSONObject) fahsionBottom;
                      ResponseEntity<String> responseEntity =
-                        rest.exchange("https://openapi.naver.com/v1/search/shop.json?query="+fashionBottomObject.get("color")+" "+fashionBottomObject.get("type"),
+                        rest.exchange("https://openapi.naver.com/v1/search/shop.json?query="+ finalGenderName +" "+fashionBottomObject.get("color")+" "+fashionBottomObject.get("type"),
                                 HttpMethod.GET, requestEntity, String.class);
                     HttpStatus httpStatus = (HttpStatus) responseEntity.getStatusCode();
                     int status=httpStatus.value();
