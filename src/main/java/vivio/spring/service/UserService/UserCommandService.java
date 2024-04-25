@@ -14,12 +14,16 @@ public interface UserCommandService {
 
     @Transactional
     String LoginUser(UserRequestDTO.LoginDTO request);
+    @Transactional
 
     void makeRandomNumber();
+    @Transactional
 
     String joinEmail(String email);
+    @Transactional
 
     void mailSend(String setFrom, String toMail, String title, String content);
+    @Transactional
 
     boolean CheckAuthNum(String email, String authNum);
 }
