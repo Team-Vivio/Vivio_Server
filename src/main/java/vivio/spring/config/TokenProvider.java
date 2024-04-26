@@ -13,7 +13,7 @@ public class TokenProvider {
 
     public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey("secret") // 시크릿 키는 실제 서버의 시크릿 키와 일치해야 합니다.
+                .setSigningKey("secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey") // 시크릿 키는 실제 서버의 시크릿 키와 일치해야 합니다.
                 .parseClaimsJws(token)
                 .getBody();
 
