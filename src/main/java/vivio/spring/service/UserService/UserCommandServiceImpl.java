@@ -53,21 +53,28 @@ public class UserCommandServiceImpl implements UserCommandService{
     @Transactional
     public String LoginUser(UserRequestDTO.LoginDTO request){
         Optional<User> userOptional=userRepository.findByEmail(request.getEmail());
-        if(userOptional.isPresent()){
-            User user=userOptional.get();
-            if(passwordEncoder.matches(request.getPassword(),user.getPassword())){
-                Date now =new Date();
+        try {
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                log.info(user.getPassword());
+                if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                    Date now = new Date();
 
-                return Jwts.builder()
-                        .setHeaderParam(Header.TYPE,Header.JWT_TYPE)
-                        .setIssuer("vivio")
-                        .setIssuedAt(now)
-                        .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis()))
-                        .claim("id",user.getId())
-                        .claim("email",user.getEmail())
-                        .signWith(SignatureAlgorithm.HS256,"secret")
-                        .compact();
+                    return Jwts.builder()
+                            .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                            .setIssuer("vivio")
+                            .setIssuedAt(now)
+                            .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis()))
+                            .claim("id", user.getId())
+                            .claim("email", user.getEmail())
+                            .signWith(SignatureAlgorithm.HS256, "secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey")
+                            .compact();
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
+            log.info(e.getMessage());
+            return null;
         }
         return null;
     }
