@@ -9,6 +9,7 @@ public class PerColRequestDTO {
     @Setter
     public static class PerColJoinDTO{
         Integer gender;
+        Integer personalColor;
 
     }
 

@@ -12,7 +12,7 @@ import vivio.spring.web.dto.TempResponse;
 @RestController
 @RequestMapping("/temp")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 public class TempRestController {
     private final TempQueryService tempQueryService;
     @GetMapping("/test")

@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/fashions")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 public class FasRecRestController {
     private final FasRecCommandService fasRecCommandService;
     private final FasRecQueryService fasRecQueryService;
