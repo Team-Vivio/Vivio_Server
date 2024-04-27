@@ -20,7 +20,7 @@ import vivio.spring.web.dto.UserResponseDTO;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 public class UserRestController {
     private static Logger logger = LoggerFactory.getLogger(UserRestController.class);  //1
     private final UserCommandService userCommandService;
