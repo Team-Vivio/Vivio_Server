@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vivio.spring.apiPayLoad.ApiResponse;
 import vivio.spring.apiPayLoad.code.status.ErrorStatus;
 import vivio.spring.apiPayLoad.exception.handler.UserHandler;
@@ -23,6 +20,7 @@ import vivio.spring.web.dto.UserResponseDTO;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserRestController {
     private static Logger logger = LoggerFactory.getLogger(UserRestController.class);  //1
     private final UserCommandService userCommandService;
