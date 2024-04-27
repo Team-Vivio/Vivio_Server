@@ -91,4 +91,5 @@ public class FasRecResponseDTO {
         private String image;
         private int price;
     }
+
 }

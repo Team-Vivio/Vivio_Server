@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import vivio.spring.domain.Beauty;
 import vivio.spring.domain.Color;
+import vivio.spring.domain.ColorRecommend;
 
 @Entity
 @Getter
@@ -15,8 +16,8 @@ public class ColorRecommendColor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="beauty")
-    private Beauty beauty;
+    @JoinColumn(name="colorRecommend")
+    private ColorRecommend colorRecommend;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="color")
     private Color color;

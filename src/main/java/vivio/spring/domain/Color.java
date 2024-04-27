@@ -13,6 +13,6 @@ public class Color {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(30)")
+    @Column(columnDefinition = "VARCHAR(60)")
     private String code;
 }

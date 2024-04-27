@@ -20,7 +20,7 @@ public class HairColor {
     @JoinColumn(name="hair")
     private Hair hair;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user")
-    private User user;
+    @JoinColumn(name="color")
+    private Color color;
 
 }

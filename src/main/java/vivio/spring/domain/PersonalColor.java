@@ -12,6 +12,7 @@ import vivio.spring.domain.enums.Tone;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Setter
 public class PersonalColor extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +26,17 @@ public class PersonalColor extends BaseEntity {
     private Session session;
     @Enumerated(EnumType.STRING)
     private Tone tone;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user")
+    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="hair")
+    private Hair hair;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="beauty")
+    private Beauty beauty;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="color")
+    private ColorRecommend colorRecommend;
 
 }

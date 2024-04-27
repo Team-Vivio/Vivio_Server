@@ -41,8 +41,16 @@ public class PerColResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ViewHairDTO {
-        List<Color> colors;
+        List<ColorDTO> colors;
         String description;
+
+    }
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ColorDTO{
+        private String code;
 
     }
     @Builder
@@ -50,7 +58,7 @@ public class PerColResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ViewPersonalColorDTO {
-        List<Color> colors;
+        List<ColorDTO> colors;
         String description;
 
     }
@@ -61,6 +69,39 @@ public class PerColResponseDTO {
     public static class ViewBeautyDTO {
 
         String description;
+
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ViewAllResultDTO {
+
+        List<ViewListResultDTO> viewListResultDTOS;
+
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ViewListResultDTO {
+        Long PerColId;
+        String image;
+        Session session;
+        Tone tone;
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ViewResponseDTO {
+        String image;
+       Gender gender;
+       Session session;
+       Tone tone;
+       ViewHairDTO hair;
+       ViewPersonalColorDTO personalColor;
+       ViewBeautyDTO beauty;
 
     }
 
