@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import vivio.spring.converter.PerColConverter;
 import vivio.spring.domain.*;
@@ -37,7 +38,7 @@ public class PersonalColorQueryServiceImpl implements PersonalColorQueryService 
         Optional<User> userOptional = userRepository.findById(userId);
         User user = userOptional.get();
 
-        List<PersonalColor> personalColors=perColRepository.findAllByUser(user);
+        List<PersonalColor> personalColors=perColRepository.findAllByUser(user, Sort.by(Sort.Direction.DESC, "createdAt"));
         List<PerColResponseDTO.ViewListResultDTO> viewListResultDTO=personalColors.stream()
                 .map(personalColor -> {
 

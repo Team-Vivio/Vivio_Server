@@ -2,6 +2,7 @@ package vivio.spring.service.FasRecService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import vivio.spring.converter.FasRecConverter;
 import vivio.spring.domain.FashionRecommand;
@@ -35,7 +36,7 @@ public class FasRecQueryServiceImpl implements FasRecQueryService {
             throw new RuntimeException("User not found with id: " + userId);  // 혹은 적절한 예외 처리
         }
         User user = userOptional.get();
-        List<FashionRecommand> fashionRecommandList = fasRecRepository.findAllByUser(user);
+        List<FashionRecommand> fashionRecommandList = fasRecRepository.findAllByUser(user,Sort.by(Sort.Direction.DESC, "createdAt"));
 
         List<FasRecResponseDTO.ViewListResultDTO> fashionList=  fashionRecommandList.stream()
                 .map(fashionRecommand -> {
