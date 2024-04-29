@@ -40,6 +40,8 @@ public class FasRecRequestDTO {
         private String content;
         private String color;
         private String type;
+        private String image;
+        private String link;
     }
     @Getter
     @Setter
