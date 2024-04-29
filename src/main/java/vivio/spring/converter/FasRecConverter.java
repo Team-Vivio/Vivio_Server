@@ -65,6 +65,8 @@ public class FasRecConverter {
         return FashionBottom.builder()
                 .content(fashionBottom.getContent())
                 .fashionRecommand(fashionRecommand)
+                .link(fashionBottom.getLink())
+                .image(fashionBottom.getImage())
                 .color(color)
                 .type(type)
                 .build();
