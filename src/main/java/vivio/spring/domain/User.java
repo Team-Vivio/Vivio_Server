@@ -9,6 +9,9 @@ import vivio.spring.domain.common.BaseEntity;
 import vivio.spring.domain.enums.Gender;
 import vivio.spring.domain.enums.Platform;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -36,5 +39,5 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(50)")
     private String phoneNumber;
     private int coin;
-
+    private LocalDate birthDate;
 }
