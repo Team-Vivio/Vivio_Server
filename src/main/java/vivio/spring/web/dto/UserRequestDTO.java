@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 public class UserRequestDTO {
     @Getter
     @Setter
@@ -18,6 +20,7 @@ public class UserRequestDTO {
         Integer gender;
         Integer coin;
         Integer platform;
+        LocalDate birthDate;
 
     }
     @Getter

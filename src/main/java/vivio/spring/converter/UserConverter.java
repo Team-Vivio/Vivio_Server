@@ -58,6 +58,7 @@ public class UserConverter {
                     .email(request.getEmail())
                     .password(request.getPassword())
                     .phoneNumber(request.getPhoneNumber())
+                    .birthDate(request.getBirthDate())
                     .coin(100)
                     .platform(platform)
                     .build();
