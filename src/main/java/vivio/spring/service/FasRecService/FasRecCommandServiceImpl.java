@@ -189,7 +189,7 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
         }
 
         //GPT 사용
-        String systemPrompt ="If you provide the following information, analyze the user's body type into one, recommend the type and color of the clothes, and present the information in JSON form. The body type in the request is one of slim, normal, and fat selected by the user. FatPercent may or may not be valuable as body fat percentage. The first thing to consider when analyzing body type is BMI, followed by body fat percentage.\n" +
+        String systemPrompt =" e in the request is one of slim, normal, and fat selected by the user. FatPercent may or may not be valuable as body fat percentage. The first thing to consider when analyzing body type is BMI, followed by body fat percentage.\n" +
                 "Jsom data probed should be given in the following format. Top recommendations and bottom recommendations should be stored separately in the form of arrangement. Fashion Tops that save top recommendations are top and Fashion Bottom is bottom. Each should provide at least 1~3 pieces and color, type, and content should be provided in Korean. Also, in the content, you need to explain why the user's body shape matches the color of this outfit, and explain clearly and in detail why it is this outfit. However, you need to change the slim to skinny, normal to normal, and fat to plump. Color and type should be provided one for each arrangement element, and only JSON value should be provided" +
 
 
@@ -231,6 +231,7 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
                 "\"BMI\" : "+bmi+",\n" +
                 "\"bodyType\" : "+type+",\n" +
                 "\"fatPercent\" : "+fatPercent+ ",\n" +
+                "\"favoriteColor\" : "+request.getColor() +"\n"+
                 "}";
         GptRequestDTO.RequstDTO gptRequestDTO= new GptRequestDTO.RequstDTO(gptModel,systemPrompt,userPrompt);
         GptResponseDTO chatGptResponse = restTemplate.postForObject(openAiUrl,gptRequestDTO,GptResponseDTO.class);
