@@ -64,7 +64,6 @@ public class UserCommandServiceImpl implements UserCommandService{
                             .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                             .setIssuer("vivio")
                             .setIssuedAt(now)
-                            .setExpiration(new Date(now.getTime() + Duration.ofMinutes(360).toMillis()))
                             .claim("id", user.getId())
                             .claim("email", user.getEmail())
                             .signWith(SignatureAlgorithm.HS256, "secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey")
