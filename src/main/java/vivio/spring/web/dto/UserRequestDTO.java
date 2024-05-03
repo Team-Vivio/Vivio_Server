@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class UserRequestDTO {
     @Getter
@@ -41,6 +42,18 @@ public class UserRequestDTO {
         private String email;
         private String authNum;
     }
+    @Getter
+    @Setter
+    public static class EmailFindDTO{
 
+        private String phoneNum;
+        private LocalDate birthDate;
+        private String name;
+    }
+    @Getter
+    @Setter
+    public static class TempPasswordDTO{
+        private String email;
+    }
 
 }
