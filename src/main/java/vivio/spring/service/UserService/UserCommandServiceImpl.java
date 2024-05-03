@@ -170,7 +170,7 @@ public class UserCommandServiceImpl implements UserCommandService{
                 return 2;
             }else{
                 String tempPassword=generateRandomPassword(8);
-                log.info(tempPassword);
+
                 user.setPassword(String.valueOf(passwordEncoder.encode(tempPassword)));
                 userRepository.save(user);
                 String setFrom = "viviosever@gmail.com";
