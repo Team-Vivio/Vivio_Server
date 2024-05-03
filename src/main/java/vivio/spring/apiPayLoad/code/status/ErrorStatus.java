@@ -15,7 +15,9 @@ public enum ErrorStatus implements BaseErrorCode {
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
-
+    //이메일 고나련 응답
+    EMAIL_INVAILD(HttpStatus.NOT_FOUND,"EMAIL4001","이메일이 존재하지 않습니다"),
+    EMAIL_SOCIAL(HttpStatus.BAD_REQUEST,"EMAIL4002","소셜로그인 계정입니다"),
 
     // 멤버 관련 응답
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),

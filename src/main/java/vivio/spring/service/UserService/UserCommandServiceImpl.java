@@ -13,13 +13,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import vivio.spring.converter.UserConverter;
 import vivio.spring.domain.User;
+import vivio.spring.domain.enums.Platform;
 import vivio.spring.repository.UserRepository;
 import vivio.spring.util.RedisUtil;
 import vivio.spring.web.dto.UserRequestDTO;
+import vivio.spring.web.dto.UserResponseDTO;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.time.Duration;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
@@ -32,6 +34,13 @@ public class UserCommandServiceImpl implements UserCommandService{
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    //랜덤 비밀번호 관련
+    private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
+    private static final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+    private static final String NUMBER = "0123456789";
+
+    private static final String DATA_FOR_RANDOM_STRING = CHAR_LOWER + CHAR_UPPER + NUMBER;
+    private static final Random random = new SecureRandom();
 
     @Autowired
     private JavaMailSender mailSender;
@@ -133,6 +142,63 @@ public class UserCommandServiceImpl implements UserCommandService{
             return false;
         }
     }
+    @Override
+    @Transactional
+    public UserResponseDTO.emailFindResultDTO FindEmail(UserRequestDTO.EmailFindDTO request){
+        Optional<User> userOptional = userRepository.findByNameAndPhoneNumberAndBirthDate(request.getName(),request.getPhoneNum(),request.getBirthDate());
 
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+
+            return UserResponseDTO.emailFindResultDTO.builder()
+                    .email(user.getEmail())
+                    .build();
+        }else{
+            return null;
+        }
+
+    }
+    @Override
+    @Transactional
+    public int TempPasswordSend(UserRequestDTO.TempPasswordDTO request){
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
+        if(userOptional.isEmpty()){
+            return 1; // 비어있음
+        }else{
+            User user= userOptional.get();
+            if(user.getPlatform()!= Platform.EMAIL){
+                return 2;
+            }else{
+                String tempPassword=generateRandomPassword(8);
+
+                user.setPassword(String.valueOf(passwordEncoder.encode(tempPassword)));
+                userRepository.save(user);
+                String setFrom = "viviosever@gmail.com";
+                String toMail = request.getEmail();
+                String title = "[ViViO] 임시 비밀번호입니다.";
+                String content =
+                "저희 서비스를 이용하고 계셔서 감사합니다." +
+                        "<br><br>" +
+                        "임시 비밀번호는 " + tempPassword +"입니다."+
+                        "<br>" +
+                        "로그인 후 바로 변경해주시길 권장합니다!";
+                mailSend(setFrom, toMail,title,content);
+                return 0;
+            }
+        }
+    }
+    public static String generateRandomPassword(int length) {
+        if (length < 1) throw new IllegalArgumentException();
+
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int rndCharAt = random.nextInt(DATA_FOR_RANDOM_STRING.length());
+            char rndChar = DATA_FOR_RANDOM_STRING.charAt(rndCharAt);
+
+            sb.append(rndChar);
+        }
+
+        return sb.toString();
+    }
 
 }

@@ -38,4 +38,13 @@ public class UserResponseDTO {
     public static class emailCheckResultDTO{
         String result;
     }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class emailFindResultDTO{
+        String email;
+    }
+
+
 }
