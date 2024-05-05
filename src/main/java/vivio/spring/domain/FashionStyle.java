@@ -14,4 +14,5 @@ public class FashionStyle {
     private Long id;
     @Column(columnDefinition = "VARCHAR(50)")
     private String name;
+    private String description;
 }
