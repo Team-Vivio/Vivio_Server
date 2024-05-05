@@ -186,7 +186,7 @@ public class FasCloCommandServiceImpl implements FasCloCommandService{
                     .bottoms(bottomList)
                     .outers(outerList).build());
         }
-        log.info(String.valueOf(fasCloItems.getFirst()));
+
         return fasCloItems;
     }
     public List<FasCloResponseDTO.FasTagItemDTO> toFasCloItems(List<MultipartFile> files) {
