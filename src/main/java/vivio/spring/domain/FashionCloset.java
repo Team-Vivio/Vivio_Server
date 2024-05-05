@@ -12,15 +12,9 @@ public class FashionCloset extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user")
     private User user;
-    private String outer;
-    private String top;
-    private String bottom;
-    @ManyToOne(fetch =FetchType.LAZY)
-    @JoinColumn(name="fashionStyle")
-    private FashionStyle fashionStyle;
+
 
 }

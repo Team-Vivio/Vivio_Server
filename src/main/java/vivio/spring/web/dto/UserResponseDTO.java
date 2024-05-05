@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class UserResponseDTO {
     @Builder
@@ -45,6 +46,7 @@ public class UserResponseDTO {
     public static class emailFindResultDTO{
         String email;
     }
+
 
 
 }
