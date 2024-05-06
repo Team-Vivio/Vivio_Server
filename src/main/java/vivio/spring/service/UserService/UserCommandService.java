@@ -1,10 +1,12 @@
 package vivio.spring.service.UserService;
 
 import jakarta.transaction.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import vivio.spring.domain.User;
 import vivio.spring.web.dto.UserRequestDTO;
 import vivio.spring.web.dto.UserResponseDTO;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public interface UserCommandService {
@@ -19,6 +21,9 @@ public interface UserCommandService {
 
     void makeRandomNumber();
     @Transactional
+    String JoinClothes(Long userId, UserRequestDTO.ClosetJoinDTO request, MultipartFile file) throws IOException;
+
+    @Transactional
 
     String joinEmail(String email);
     @Transactional
@@ -28,10 +33,12 @@ public interface UserCommandService {
 
     boolean CheckAuthNum(String email, String authNum);
 
+
     @Transactional
     UserResponseDTO.emailFindResultDTO FindEmail(UserRequestDTO.EmailFindDTO request);
 
     @Transactional
     int TempPasswordSend(UserRequestDTO.TempPasswordDTO requst);
+
 }
 

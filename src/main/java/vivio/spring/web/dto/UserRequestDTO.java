@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import vivio.spring.domain.enums.Gender;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -24,6 +25,21 @@ public class UserRequestDTO {
         LocalDate birthDate;
 
     }
+
+    @Getter
+    @Setter
+    public static class UserInfoDTO{
+        String name;
+        String email;
+        String phoneNumber;
+        Gender gender;
+        Integer coin;
+    }
+    @Getter
+    @Setter
+    public static class ClosetJoinDTO{
+        String type;
+    }
     @Getter
     @Setter
     public static class LoginDTO{
@@ -35,6 +51,11 @@ public class UserRequestDTO {
     public static class EmailDTO{
         @Email
         private String email;
+    }
+    @Getter
+    @Setter
+    public  static class ViewClosetDTO{
+        String type;
     }
     @Data
     public static class EmailCheckDTO{

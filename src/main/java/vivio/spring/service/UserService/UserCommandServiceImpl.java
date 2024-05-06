@@ -1,5 +1,7 @@
 package vivio.spring.service.UserService;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -7,13 +9,24 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import vivio.spring.converter.UserConverter;
+import vivio.spring.domain.Bottom;
+import vivio.spring.domain.ClothesOuter;
+import vivio.spring.domain.Top;
 import vivio.spring.domain.User;
+
+import vivio.spring.repository.BottomRepository;
+import vivio.spring.repository.OuterRepository;
+import vivio.spring.repository.TopRepository;
+
 import vivio.spring.domain.enums.Platform;
+
 import vivio.spring.repository.UserRepository;
 import vivio.spring.util.RedisUtil;
 import vivio.spring.web.dto.UserRequestDTO;
@@ -21,7 +34,12 @@ import vivio.spring.web.dto.UserResponseDTO;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+
+import java.io.IOException;
+import java.time.Duration;
+
 import java.security.SecureRandom;
+
 import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
@@ -31,7 +49,10 @@ import java.util.Random;
 @RequiredArgsConstructor
 @org.springframework.transaction.annotation.Transactional(readOnly = true)
 public class UserCommandServiceImpl implements UserCommandService{
+    private final AmazonS3 amazonS3;
 
+    @Value("${aws.s3.bucket}")
+    private String bucket;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     //랜덤 비밀번호 관련
@@ -41,6 +62,10 @@ public class UserCommandServiceImpl implements UserCommandService{
 
     private static final String DATA_FOR_RANDOM_STRING = CHAR_LOWER + CHAR_UPPER + NUMBER;
     private static final Random random = new SecureRandom();
+
+    private final TopRepository topRepository;
+    private final OuterRepository outerRepository;
+    private final BottomRepository bottomRepository;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -96,6 +121,41 @@ public class UserCommandServiceImpl implements UserCommandService{
         }
 
         authNumber = Integer.parseInt(randomNumber);
+    }
+    @Override
+    @Transactional
+    public String JoinClothes(Long userId, UserRequestDTO.ClosetJoinDTO request, MultipartFile file) throws IOException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user= userOptional.get();
+
+
+        String originalFileName = file.getOriginalFilename();
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
+
+        amazonS3.putObject(bucket,originalFileName,file.getInputStream(),metadata);
+        String image = amazonS3.getUrl(bucket,originalFileName).toString();
+        switch(request.getType()){
+            case "top":
+                Top top=UserConverter.toTop(image,user);
+                top.setUser(user);
+                topRepository.save(top);
+                break;
+            case "outer":
+                ClothesOuter clothesOuter = UserConverter.toOuter(image);
+                clothesOuter.setUser(user);
+                outerRepository.save(clothesOuter);
+                break;
+            case "bottom":
+                Bottom bottom = UserConverter.toBottom(image,user);
+                bottom.setUser(user);
+                bottomRepository.save(bottom);
+                break;
+
+        }
+        return image;
     }
     @Override
     public String joinEmail(String email){
@@ -157,6 +217,8 @@ public class UserCommandServiceImpl implements UserCommandService{
             return null;
         }
 
+
+
     }
     @Override
     @Transactional
@@ -200,5 +262,6 @@ public class UserCommandServiceImpl implements UserCommandService{
 
         return sb.toString();
     }
+
 
 }
