@@ -75,7 +75,10 @@ public class UserResponseDTO {
         Gender gender;
         Integer coin;
     }
-
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class emailFindResultDTO{
         String email;
     }
