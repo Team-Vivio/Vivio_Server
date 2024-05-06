@@ -1,6 +1,7 @@
 package vivio.spring.web.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -103,8 +104,8 @@ public class UserRestController {
         int result = userCommandService.TempPasswordSend(request);
         return switch (result) {
             case 0 -> ApiResponse.onSuccess("Suceess");
-            case 1 -> throw new UserHandler(ErrorStatus.EMAIL_INVAILD);
-            case 2 -> throw new UserHandler(ErrorStatus.EMAIL_SOCIAL);
+            case 1 -> ApiResponse.onFailure("EMAIL4001","이메일이 존재하지 않습니다",null);
+            case 2 -> ApiResponse.onFailure("EMAIL4002","소셜로그인 계정입니다.", null);
             default -> null;
         };
     }
