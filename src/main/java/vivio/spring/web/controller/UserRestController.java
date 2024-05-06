@@ -57,9 +57,11 @@ public class UserRestController {
         Long userId = tokenProvider.getUserIdFromToken(token);
         log.info(String.valueOf(userId));
 
+
         return ApiResponse.onSuccess(userQueryService.viewClosets(userId,type));
     }
-    @PostMapping("/siginup")
+
+    @PostMapping("/signup")
     public ApiResponse<UserResponseDTO.JoinResultDTO> join(@RequestBody @Valid UserRequestDTO.JoinDto request){
 
         log.info(request.getName());
@@ -67,7 +69,7 @@ public class UserRestController {
         log.info(user.getName());
         return ApiResponse.onSuccess(UserConverter.toJoinResultDTO(user));
     }
-    @PostMapping("/siginin")
+    @PostMapping("/signin")
     public ApiResponse<UserResponseDTO.LoginResultDTO> login(@RequestBody @Valid UserRequestDTO.LoginDTO request){
         String token= userCommandService.LoginUser(request);
         return ApiResponse.onSuccess(UserConverter.toLoginResultDTO(token));
@@ -84,6 +86,27 @@ public class UserRestController {
     public ApiResponse<UserResponseDTO.userinfoDTO> userInfoCheck(@RequestHeader("Authorization") String token){
         Long userId = tokenProvider.getUserIdFromToken(token);
         return ApiResponse.onSuccess(userQueryService.viewUserinfo(userId));
+    }
+    @PostMapping("/findEmail")
+    public ApiResponse<UserResponseDTO.emailFindResultDTO> emailFind(@RequestBody @Valid UserRequestDTO.EmailFindDTO request){
+        UserResponseDTO.emailFindResultDTO email= userCommandService.FindEmail(request);
+
+        if(email==null){
+            return ApiResponse.onSuccess(null);
+
+        }else{
+            return ApiResponse.onSuccess(email);
+        }
+    }
+    @PostMapping("/sendTempPassword")
+    public ApiResponse<String> sendPassword(@RequestBody @Valid UserRequestDTO.TempPasswordDTO request){
+        int result = userCommandService.TempPasswordSend(request);
+        return switch (result) {
+            case 0 -> ApiResponse.onSuccess("Suceess");
+            case 1 -> throw new UserHandler(ErrorStatus.EMAIL_INVAILD);
+            case 2 -> throw new UserHandler(ErrorStatus.EMAIL_SOCIAL);
+            default -> null;
+        };
     }
 
 }

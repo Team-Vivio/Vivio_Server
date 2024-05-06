@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import vivio.spring.domain.enums.Gender;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class UserRequestDTO {
     @Getter
     @Setter
@@ -19,6 +22,7 @@ public class UserRequestDTO {
         Integer gender;
         Integer coin;
         Integer platform;
+        LocalDate birthDate;
 
     }
 
@@ -59,6 +63,18 @@ public class UserRequestDTO {
         private String email;
         private String authNum;
     }
+    @Getter
+    @Setter
+    public static class EmailFindDTO{
 
+        private String phoneNum;
+        private LocalDate birthDate;
+        private String name;
+    }
+    @Getter
+    @Setter
+    public static class TempPasswordDTO{
+        private String email;
+    }
 
 }

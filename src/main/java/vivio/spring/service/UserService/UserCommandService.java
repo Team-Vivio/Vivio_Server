@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import vivio.spring.domain.User;
 import vivio.spring.web.dto.UserRequestDTO;
+import vivio.spring.web.dto.UserResponseDTO;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -31,6 +32,13 @@ public interface UserCommandService {
     @Transactional
 
     boolean CheckAuthNum(String email, String authNum);
+
+
+    @Transactional
+    UserResponseDTO.emailFindResultDTO FindEmail(UserRequestDTO.EmailFindDTO request);
+
+    @Transactional
+    int TempPasswordSend(UserRequestDTO.TempPasswordDTO requst);
 
 }
 

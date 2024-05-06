@@ -50,6 +50,7 @@ public class FasRecRequestDTO {
         private float height;
         private float weight;
         private int type;
+        private String color;
     }
 
 }
