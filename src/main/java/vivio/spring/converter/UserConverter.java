@@ -20,7 +20,7 @@ public class UserConverter {
                 .email(user.getEmail())
                 .gender(user.getGender())
                 .phoneNumber(user.getPhoneNumber())
-                .coin(user.getCoin())
+                .birthDate(user.getBirthDate())
                 .build();
     }
     public static UserResponseDTO.JoinResultDTO toJoinResultDTO(User user) {

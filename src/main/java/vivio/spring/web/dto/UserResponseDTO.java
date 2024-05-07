@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import vivio.spring.domain.enums.Gender;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -67,15 +68,17 @@ public class UserResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-
     public static class userinfoDTO{
         String name;
         String email;
         String phoneNumber;
         Gender gender;
-        Integer coin;
+        LocalDate birthDate;
     }
-
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class emailFindResultDTO{
         String email;
     }
