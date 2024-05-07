@@ -28,7 +28,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     EMAIL_EXCEPTION(HttpStatus.BAD_REQUEST, "USER4001","인증번호가 일치 하지 않습니다."),
     USER_EXCEPTION(HttpStatus.BAD_REQUEST, "USER4002","비밀번호가 일치 하지 않습니다");
+
+
     //temp
+
 
     private final HttpStatus httpStatus;
     private final String code;
