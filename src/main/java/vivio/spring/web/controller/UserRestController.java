@@ -62,6 +62,16 @@ public class UserRestController {
         return ApiResponse.onSuccess(userQueryService.viewClosets(userId,type));
     }
 
+    @DeleteMapping("/closet/{type}/{id}")
+    public ApiResponse<String>deleteCloth(@RequestHeader("Authorization") String token, @PathVariable("type") String type, @PathVariable("id") Long id){
+        Long userId = tokenProvider.getUserIdFromToken(token);
+        boolean result = userCommandService.DeleteCloth(userId, type, id);
+        if(result)
+            return ApiResponse.onSuccess("삭제에 성공했습니다");
+        else
+            return ApiResponse.onFailure("CLOSET4005","삭제에 실패했습니다",null);
+    }
+
     @PostMapping("/signup")
     public ApiResponse<UserResponseDTO.JoinResultDTO> join(@RequestBody @Valid UserRequestDTO.JoinDto request){
 
@@ -80,6 +90,7 @@ public class UserRestController {
     public ApiResponse<UserResponseDTO.emailResultDTO> emailAuth(@RequestBody @Valid UserRequestDTO.EmailDTO request){
         String authNumber=userCommandService.joinEmail(request.getEmail());
         return ApiResponse.onSuccess(UserConverter.toEmailResultDTO(authNumber));
+
     }
 
 
@@ -108,6 +119,17 @@ public class UserRestController {
             case 2 -> ApiResponse.onFailure("EMAIL4002","소셜로그인 계정입니다.", null);
             default -> null;
         };
+    }
+
+    @PostMapping("/changePassword")
+    public ApiResponse<String> changePassword(@RequestHeader("Authorization") String token,@RequestBody @Valid UserRequestDTO.ChangePasswordDTO request){
+        String password = request.getPassword();
+        Long userId = tokenProvider.getUserIdFromToken(token);
+        boolean result = userCommandService.ChangePassword(userId, request);
+        if(result)
+            return ApiResponse.onSuccess("Sucess");
+        else
+            return ApiResponse.onFailure("USER4003","비밀번호가 일치하지 않습니다",null);
     }
 
 }

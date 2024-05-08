@@ -11,4 +11,8 @@ import java.util.List;
 public interface OuterRepository extends JpaRepository<ClothesOuter, Long> {
     List<ClothesOuter> findAllByUser(User user);
 
+    void deleteByIdAndUser(Long id, User user);
+
+    boolean existsByIdAndUser(Long id, User user);
+
 }

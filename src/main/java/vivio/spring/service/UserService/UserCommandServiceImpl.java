@@ -41,6 +41,7 @@ import java.time.Duration;
 import java.security.SecureRandom;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
@@ -81,6 +82,20 @@ public class UserCommandServiceImpl implements UserCommandService{
         newUser.setPassword(String.valueOf(passwordEncoder.encode(newUser.getPassword())));
         log.info(newUser.getPassword());
         return userRepository.save(newUser);
+    }
+
+    @Override
+    @Transactional
+    public boolean ChangePassword(Long userId, UserRequestDTO.ChangePasswordDTO request){
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user = userOptional.get();
+        if(passwordEncoder.matches(request.getOriginalPassword(), user.getPassword())){
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
@@ -156,6 +171,43 @@ public class UserCommandServiceImpl implements UserCommandService{
 
         }
         return image;
+    }
+
+    @Override
+    @Transactional
+    public boolean DeleteCloth(Long userId, String type, Long id){
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user = userOptional.orElse(null); // 사용자가 존재하지 않을 때도 처리하기 위해 Optional.orElse 사용
+        if (user == null) {
+            return false; // 사용자가 없으면 false 반환
+        }
+
+        log.info(String.valueOf(userId) + " " + String.valueOf(id));
+
+        switch (type){
+            case "top":
+                if (topRepository.existsByIdAndUser(id, user)) {
+                    topRepository.deleteByIdAndUser(id, user);
+                    return true;
+                }
+                break; // 'top'을 찾지 못하면 바로 switch 문을 빠져나가도록 함
+
+            case "bottom":
+                if (bottomRepository.existsByIdAndUser(id, user)) {
+                    bottomRepository.deleteByIdAndUser(id, user);
+                    return true;
+                }
+                break; // 'bottom'을 찾지 못하면 바로 switch 문을 빠져나가도록 함
+
+            case "outer":
+                if (outerRepository.existsByIdAndUser(id, user)) {
+                    outerRepository.deleteByIdAndUser(id, user);
+                    return true;
+                }
+                break; // 'outer'를 찾지 못하면 바로 switch 문을 빠져나가도록 함
+        }
+
+        return false; // 위 조건에 해당하지 않으면 false 반환
     }
     @Override
     public String joinEmail(String email){
