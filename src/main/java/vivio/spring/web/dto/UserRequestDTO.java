@@ -77,4 +77,11 @@ public class UserRequestDTO {
         private String email;
     }
 
+    @Getter
+    @Setter
+    public static class ChangePasswordDTO{
+        private String originalPassword;
+        private String password;
+    }
+
 }

@@ -24,6 +24,9 @@ public interface UserCommandService {
     String JoinClothes(Long userId, UserRequestDTO.ClosetJoinDTO request, MultipartFile file) throws IOException;
 
     @Transactional
+    boolean DeleteCloth(Long userId, String type, Long id);
+
+    @Transactional
 
     String joinEmail(String email);
     @Transactional
@@ -39,6 +42,9 @@ public interface UserCommandService {
 
     @Transactional
     int TempPasswordSend(UserRequestDTO.TempPasswordDTO requst);
+
+    @Transactional
+    boolean ChangePassword(Long userId, UserRequestDTO.ChangePasswordDTO request);
 
 }
 
