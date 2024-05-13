@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import vivio.spring.apiPayLoad.ApiResponse;
 import vivio.spring.service.SeaCloService.SeaCloCommandService;
+import vivio.spring.web.dto.FasCloRequestDTO;
+import vivio.spring.web.dto.SeaCloReqeustDTO;
 import vivio.spring.web.dto.SeaCloResponseDTO;
 
 import java.io.File;
@@ -23,9 +25,9 @@ import java.util.List;
 public class SeaCloRestController {
     private final SeaCloCommandService seaCloCommandService;
     @PostMapping("/clothes")
-    public ApiResponse<SeaCloResponseDTO.SeaCloListDTO> create(@RequestPart(value="image",required = true) @Valid MultipartFile image) throws IOException {
+    public ApiResponse<SeaCloResponseDTO.SeaCloListDTO> create(@RequestPart(value="request",required = true) @Valid SeaCloReqeustDTO.createDTO request, @RequestPart(value="image",required = true) @Valid MultipartFile image) throws IOException {
 
 
-        return ApiResponse.onSuccess(seaCloCommandService.createSeaClo(image));
+        return ApiResponse.onSuccess(seaCloCommandService.createSeaClo(request,image));
     }
 }

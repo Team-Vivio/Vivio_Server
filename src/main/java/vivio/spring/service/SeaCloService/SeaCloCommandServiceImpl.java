@@ -11,6 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import vivio.spring.converter.SeaCloConverter;
+import vivio.spring.domain.ItemList;
+
+import vivio.spring.repository.ItemListRepository;
+import vivio.spring.web.dto.SeaCloReqeustDTO;
 import vivio.spring.web.dto.SeaCloResponseDTO;
 
 import java.io.File;
@@ -20,6 +25,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,13 +37,23 @@ public class SeaCloCommandServiceImpl implements SeaCloCommandService {
     private static final String PROJECT_ID = "maptraveler";
     private static final String LOCATION = "us-east1"; // 수정 필요
     private static final String GCS_URI = "gs://vivi-o/musinsa.csv"; // 수정 필요
-
+    private  final ItemListRepository itemListReposiotroy;
     @Override
     @Transactional()
-    public  SeaCloResponseDTO.SeaCloListDTO createSeaClo(MultipartFile file) throws IOException {
+    public  SeaCloResponseDTO.SeaCloListDTO createSeaClo(SeaCloReqeustDTO.createDTO request,MultipartFile file) throws IOException {
+        //deleteProductSet("maptraveler","us-east1","product_set_id");
         //importProductsFromCsv();
-        getSimilarProductsFile("maptraveler","us-east1","product_set_id","apparel-v2",file,"category=clothes");
-        return null;
+        String type="";
+        switch (request.getType()){
+            case "top":
+                type="top";
+                break;
+            case "bottom":
+                type = "bottom";
+                break;
+        }
+       return getSimilarProductsFile("maptraveler","us-east1","product_set_id","apparel-v2",file,"category="+type);
+        //return null;
     }
     public void importProductsFromCsv() throws IOException {
         GoogleCredentials credentials = GoogleCredentials.fromStream(new ClassPathResource("maptraveler-b8b198d2054d.json").getInputStream());
@@ -91,8 +108,25 @@ public class SeaCloCommandServiceImpl implements SeaCloCommandService {
 
         return tempFile; // 생성된 임시 파일 반환
     }
+    public static void deleteProductSet(String projectId, String computeRegion, String productSetId)
+            throws IOException {
+        GoogleCredentials credentials = GoogleCredentials.fromStream(new ClassPathResource("maptraveler-b8b198d2054d.json").getInputStream());
+        ProductSearchSettings settings = ProductSearchSettings.newBuilder()
+                .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
+                .build();
+        try (ProductSearchClient client = ProductSearchClient.create(settings)) {
 
-    public static void getSimilarProductsFile(
+            // Get the full path of the product set.
+            String formattedName = ProductSetName.format(projectId, computeRegion, productSetId);
+            // Delete the product set.
+            client.deleteProductSet(formattedName);
+            System.out.println(String.format("Product set deleted"));
+        }catch(Exception e){
+            throw new IOException(e);
+
+        }
+    }
+    public SeaCloResponseDTO.SeaCloListDTO getSimilarProductsFile(
         String projectId,
         String computeRegion,
         String productSetId,
@@ -142,16 +176,32 @@ public class SeaCloCommandServiceImpl implements SeaCloCommandService {
 
         List<ProductSearchResults.Result> similarProducts =
             response.getResponses(0).getProductSearchResults().getResultsList();
-        log.info("Similar Products: ");
-        for (ProductSearchResults.Result product : similarProducts) {
-          log.info(String.format("\nProduct name: %s", product.getProduct().getName()));
-          log.info(
-              String.format("Product display name: %s", product.getProduct().getDisplayName()));
-          log.info(
-              String.format("Product description: %s", product.getProduct().getDescription()));
-          log.info(String.format("Score(Confidence): %s", product.getScore()));
-          log.info(String.format("Image name: %s", product.getImage()));
-        }
+        List<SeaCloResponseDTO.SeaCloItemDTO> items=similarProducts.stream()
+                          .map(product->{
+                              String productIdPath = product.getProduct().getName();
+                              String[] parts = productIdPath.split("/");
+                              String itemId = parts[parts.length - 1];
+                              Optional<ItemList> itemListOptional=  itemListReposiotroy.findByTitle(itemId);
+                              ItemList itemList=itemListOptional.get();
+
+                              return SeaCloConverter.toSeaCloItemDTO(itemList.getPrice(),itemId,itemList.getImage(),itemList.getUrl());
+                          }).collect(Collectors.toList());
+//        log.info("Similar Products: ");
+//        for (ProductSearchResults.Result product : similarProducts) {
+//            log.info(String.format("\nProduct name: %s", product.getProduct().getName()));
+//            log.info(
+//              String.format("Product display name: %s", product.getProduct().getDisplayName()));
+//            log.info(
+//              String.format("Product description: %s", product.getProduct().getDescription()));
+//            log.info(String.format("Score(Confidence): %s", product.getScore()));
+//            log.info(String.format("Image name: %s", product.getImage()));
+//
+//            String productIdPath = product.getProduct().getName();
+//            String[] parts = productIdPath.split("/");
+//            String itemId = parts[parts.length - 1];
+//            log.info(String.format("Item ID: %s", itemId));
+            return SeaCloConverter.toSeaCloListDTO(items);
+
       }
     }
 }
