@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "maptraveler",
+  "private_key_id": "b8b198d2054d86dd30ea10dc2d493598c2666b30",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCbabhog2c3r7Cm\nGYrjiPi8JHknTrlhS4Q4wKEeAzcXlWDMio7XO0R28ylYbDJbxJDTP5lmS9Y4BZAg\n2dDAVS2FZ0zwIV4AbDaK9mevb7lGN1z33XV6n/o+FW0UJJIgDiSaYhXHGGPk7Rdz\n+s//sh4FUQ1mtYBOtSnUogvjy6Tyaa8MDZGhsBYfisHKeH2luRDBGzZxZ5PW2wbR\nzoht9m/n9lHP+h9rSpysaRUuwJhKI/cxWjqk6tRwkVnPcfNa4gI6cWAw7i/98KF7\n1GWcfaD7IvVHDaj/J1tiSN+am+dDbVPeMRxizLBzFwo9YKLT1gBajHO5f/z+6P5z\n+QD2jD/bAgMBAAECggEAC+QqcoC/aJDeVM82g9NqqManqHzLDWlATDFdApVfZUQO\nPIhLhqdnxSw02SmqLsBbDnbaz2t1ECNI1GKmKNk7mu39ApCjByhAgiB5bYCAbiF1\nURfWUdQkyxRLnNNxhNdgMJnZrbqthgooFb02pgtkZaa+fkHb9+m/sh/WBg+CZvPV\npO4nIzlXGmXLTS2SEQ8JjgNWILjRjtscu3pH/4L9whILYYAVWpNaQiTQR08opd1u\nInLnJTqHZcVZtg4SwhU4mHbHbUFAOsH4FovnoFOiYR5qbNcbUr4yNZtcNA1JmRVU\n5ys5gYXCC/82SdqhfNZPXPWFgfhwjbuP0N3gmY00FQKBgQDJe8HFJjY54dBtTndB\nYFjOEVfbDZzlE7cYJh4+3CXf2J7CRQZ5kG3b5mKt8RSGvp60R1AMpyEvX5rpA7K8\nQLdgup6x+qYq5WUKNy6D6syMVZALX7Bg9QGIwQo+4aUxqdn2ak2g2eqJw2iRyD4v\nDYZ/u32X8nF1iYlH/WG/YhhzzQKBgQDFdsfM7Cygpr84iO1wuGQIVOVtTlpHCpQw\n5+3h/unLTXTxj2utruvshnYvfGSFe5aee2iE0vI5gpDsurTjAv1w1lzIF/kRoPIp\ngXOCko/v+oJe4FFNJwrLDwc/A3l4poVaG9fO6lqHL9wYrkQNcVHDlnYweSDuoCzP\nvNQWFlaqRwKBgBk1quEIDvDfGD0U/EbpzzK5aMy3v1HKTbZvzoj+8p43dGXKTS0Y\nrSY+hUpOR8s0Ppc/9PwgTT6oL7HIDK0RS+CGeSS7v97OJP5KOT+4OS+15PgHWQJI\npZB+1tFXWlwEbIkwc9YUbgwerw7OhzlL7/A7fVNtulSCiPLA+WIA3B5hAoGBAJ3u\n59UF3JfNZknQcqBiSlfDlxB6x4fkdSw8hC3qVZHubKc7v7LVogq2bNaEFl4QwCIX\nsDv0ABpxTHqaxkx/OrfCK8k6K1KnOKhryjhYAtm8sgMyRLSBkodgiLokjEYsYaH1\nfQEYvbk8VTxEPVfHF89oizUv3GAfKlgovjTAPybHAoGAfKmB5Wp2wRaHvBl1Oqr7\nITMsOqDZzt91AubymTTss4UqoVhGvGskgMbiOJxc4uYwZbRO+ZwQmtkrlfX2lkGf\nHOCj61MHKhd4SJHA27rLnzo/u9WS64EKysV4V4d3Oj1b2+8clhHtMQ8s5HvYe3lG\nwjf6U4PJXKbVPEVbzdscoTM=\n-----END PRIVATE KEY-----\n",
+  "client_email": "adimin@maptraveler.iam.gserviceaccount.com",
+  "client_id": "113576226704255873576",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/adimin%40maptraveler.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
