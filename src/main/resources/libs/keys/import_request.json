@@ -1,0 +1,8 @@
+
+{
+  "inputConfig": {
+    "gcsSource": {
+      "csvFileUri": "gs://vivi-o/musinsa.csv"
+    }
+  }
+}
