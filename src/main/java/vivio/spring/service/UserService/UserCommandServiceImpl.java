@@ -36,12 +36,10 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import java.io.IOException;
-import java.time.Duration;
 
 import java.security.SecureRandom;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
