@@ -20,6 +20,8 @@ public interface UserCommandService {
     @Transactional
 
     void makeRandomNumber();
+
+
     @Transactional
     String JoinClothes(Long userId, UserRequestDTO.ClosetJoinDTO request, MultipartFile file) throws IOException;
 

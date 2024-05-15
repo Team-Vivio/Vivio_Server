@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import vivio.spring.domain.common.BaseEntity;
 import vivio.spring.domain.enums.Gender;
 import vivio.spring.domain.enums.Platform;
+import vivio.spring.domain.enums.UserRole;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -40,4 +41,10 @@ public class User extends BaseEntity {
     private String phoneNumber;
     private int coin;
     private LocalDate birthDate;
+
+    private String provider;
+    private String providerId;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
 }
