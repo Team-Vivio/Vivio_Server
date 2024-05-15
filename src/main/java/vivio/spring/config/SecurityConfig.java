@@ -2,6 +2,7 @@ package vivio.spring.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
@@ -23,6 +24,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class SecurityConfig  {
     private final ObjectMapper objectMapper;
+    @Value("{spring.security.oauth2.client.registraion.goolge.client-id}")
+    String clientId;
+    @Value("{spring.security.oauth2.client.registraion.goolge.client-id}")
+    String clientSecret;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -63,8 +68,8 @@ public class SecurityConfig  {
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
         ClientRegistration googleRegistration = ClientRegistration.withRegistrationId("google")
-                .clientId(System.getenv("GOOGLE_CLIENT_ID"))
-                .clientSecret(System.getenv("GOOGLE_CLIENT_SECRET"))
+                .clientId(clientId)
+                .clientSecret(clientSecret)
                 .scope("email", "profile")
                 .authorizationUri("https://accounts.google.com/o/oauth2/auth")
                 .tokenUri("https://oauth2.googleapis.com/token")
