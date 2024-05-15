@@ -10,6 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -54,5 +58,23 @@ public class SecurityConfig  {
                 .csrf((auth) -> auth.disable());
 
         return http.build();
+    }
+
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        ClientRegistration googleRegistration = ClientRegistration.withRegistrationId("google")
+                .clientId(System.getenv("GOOGLE_CLIENT_ID"))
+                .clientSecret(System.getenv("GOOGLE_CLIENT_SECRET"))
+                .scope("email", "profile")
+                .authorizationUri("https://accounts.google.com/o/oauth2/auth")
+                .tokenUri("https://oauth2.googleapis.com/token")
+                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
+                .userNameAttributeName("sub")
+                .clientName("Google")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+                .build();
+
+        return new InMemoryClientRegistrationRepository(googleRegistration);
     }
 }
