@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.web.SecurityFilterChain;
 import vivio.spring.apiPayLoad.exception.handler.OAuth2AuthenticationSuccessHandler;
 import vivio.spring.service.UserService.CustomOauth2UserService;
@@ -30,11 +31,14 @@ public class SecurityConfig {
       private final JwtTokenProvider jwtTokenProvider;
       private final CustomOauth2UserService customOauth2UserService;
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId;
+    private String googleClientId;
 
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret;
-
+    private String googleClientSecret;
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
+    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
+    private String kakaoClientSecret;
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -67,8 +71,8 @@ public class SecurityConfig {
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
         ClientRegistration googleRegistration = ClientRegistration.withRegistrationId("google")
-                .clientId(clientId)
-                .clientSecret(clientSecret)
+                .clientId(googleClientId)
+                .clientSecret(googleClientSecret)
                 .scope("email", "profile")
                 .authorizationUri("https://accounts.google.com/o/oauth2/auth")
                 .tokenUri("https://oauth2.googleapis.com/token")
@@ -78,7 +82,20 @@ public class SecurityConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
                 .build();
+        ClientRegistration kakaoRegistration = ClientRegistration.withRegistrationId("kakao")
+                .clientId(kakaoClientId)
+                .clientSecret(kakaoClientSecret)
+                .scope("account_email","profile_nickname")
+                .authorizationUri("https://kauth.kakao.com/oauth/authorize")
+                .tokenUri("https://kauth.kakao.com/oauth/token")
+                .userInfoUri("https://kapi.kakao.com/v2/user/me")
+                .userNameAttributeName("id")
+                .clientName("Kakao")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+                .build();
 
-        return new InMemoryClientRegistrationRepository(googleRegistration);
+        return new InMemoryClientRegistrationRepository(googleRegistration, kakaoRegistration);
     }
 }
