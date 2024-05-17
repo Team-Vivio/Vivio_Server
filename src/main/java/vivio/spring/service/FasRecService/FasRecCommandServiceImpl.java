@@ -242,8 +242,15 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
         JSONObject object = (JSONObject) jsonParser.parse(gptResult);
         JSONArray fashionTops=(JSONArray) object.get("fashionTops");
         JSONArray fashionBottoms=(JSONArray) object.get("fashionBottoms");
-
-
+         JSONArray newFashionTops = new JSONArray();
+        if(request.getColor()!=null) {
+            String colorName = determineColorFamily(request.getColor());
+            JSONObject newFashionTop = new JSONObject();
+            newFashionTop.put("color", colorName);
+            newFashionTop.put("type", "후드티");
+            newFashionTop.put("content", "노멀하고 " + colorName + "인 후드티를 추천합니다.");
+            fashionTops.add(0,newFashionTop);
+        }
 
 
         //네이버 쇼핑 사용
@@ -320,5 +327,31 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
         }
         return null;
     }
+    public String determineColorFamily(String hexCode) {
+        // #을 제거하고 16진수 문자열을 파싱하여 RGB 값을 구함
+        int r = Integer.parseInt(hexCode.substring(1, 3), 16);
+        int g = Integer.parseInt(hexCode.substring(3, 5), 16);
+        int b = Integer.parseInt(hexCode.substring(5, 7), 16);
 
+        // 색상 계열을 결정하는 로직
+        if (r > 200 && g < 100 && b < 100) {
+            return "빨간색";
+        } else if (g > 200 && r < 100 && b < 100) {
+            return "초록색";
+        } else if (b > 200 && r < 100 && g < 100) {
+            return "파란색";
+        } else if (r > 200 && g > 200 && b < 100) {
+            return "노란색";
+        } else if (r > 100 && g < 100 && b > 100) {
+            return "보라색";
+        } else if (r < 100 && g > 100 && b > 100) {
+            return "시안색";
+        } else if (r > 150 && g > 150 && b > 150) {
+            return "하얀색";
+        } else if (r < 100 && g < 100 && b < 100) {
+            return "검정색";
+        } else {
+            return "Other";
+        }
+    }
 }
