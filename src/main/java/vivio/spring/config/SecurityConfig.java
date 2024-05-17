@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.SecurityFilterChain;
+import vivio.spring.apiPayLoad.exception.handler.OAuth2AuthenticationSuccessHandler;
+import vivio.spring.service.UserService.CustomOauth2UserService;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -25,7 +27,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final ObjectMapper objectMapper;
-
+      private final JwtTokenProvider jwtTokenProvider;
+      private final CustomOauth2UserService customOauth2UserService;
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
 
@@ -37,32 +40,30 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+   @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests.anyRequest().permitAll());
 
-        http.formLogin(auth -> auth.loginPage("/oauth-login/login")
-                .loginProcessingUrl("/oauth-login/loginProc")
-                .usernameParameter("loginId")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/oauth-login")
-                .failureUrl("/oauth-login")
-                .permitAll());
-
-        http.oauth2Login(auth -> auth.loginPage("/oauth-login/login")
-                .defaultSuccessUrl("/oauth-login")
+        http.oauth2Login(auth -> auth
+                .loginPage("/oauth-login/login")
+                .defaultSuccessUrl("/oauth-login/success", true)
                 .failureUrl("/oauth-login/login")
+                .userInfoEndpoint()
+                .userService(customOauth2UserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler())
                 .permitAll());
 
         http.logout(auth -> auth.logoutUrl("/oauth-login/logout"));
 
-        http.csrf(auth -> auth.disable());
-
         return http.build();
     }
-
+    @Bean
+    public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
+        return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider);
+    }
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
         ClientRegistration googleRegistration = ClientRegistration.withRegistrationId("google")

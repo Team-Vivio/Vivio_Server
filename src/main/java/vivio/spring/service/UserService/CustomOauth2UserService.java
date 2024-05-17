@@ -11,6 +11,7 @@ import vivio.spring.config.CustomOauth2UserDetails;
 import vivio.spring.config.GoogleUserDetails;
 import vivio.spring.config.OAuth2UserInfo;
 import vivio.spring.domain.User;
+import vivio.spring.domain.enums.Platform;
 import vivio.spring.domain.enums.UserRole;
 import vivio.spring.repository.UserRepository;
 
@@ -38,18 +39,25 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new GoogleUserDetails(oAuth2User.getAttributes());
 
         }
-
+        Platform platform = null;
         String providerId = oAuth2UserInfo.getProviderId();
         String email = oAuth2UserInfo.getEmail();
         String loginId = provider + "_" + providerId;
         String name = oAuth2UserInfo.getName();
-
+        switch(providerId){
+            case "google":
+                platform=Platform.GOOGLE;
+            case "kakao" :
+                platform=Platform.KAKAO;
+        }
         Optional<User> findMember = memberRepository.findByEmail(email);
         User member;
 
         if (findMember.isEmpty()) {
             member = User.builder()
+                    .email(email)
                     .name(name)
+                    .platform(platform)
                     .providerId(providerId)
                     .role(UserRole.USER)
                     .build();
