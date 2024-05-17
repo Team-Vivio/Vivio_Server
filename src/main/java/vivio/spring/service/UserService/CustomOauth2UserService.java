@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import vivio.spring.config.CustomOauth2UserDetails;
 import vivio.spring.config.GoogleUserDetails;
+import vivio.spring.config.KakaoUserDetails;
 import vivio.spring.config.OAuth2UserInfo;
 import vivio.spring.domain.User;
 import vivio.spring.domain.enums.Platform;
@@ -38,6 +39,9 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             log.info("구글 로그인");
             oAuth2UserInfo = new GoogleUserDetails(oAuth2User.getAttributes());
 
+        }else if (provider.equals("kakao")) {
+            log.info("카카오 로그인");
+            oAuth2UserInfo = new KakaoUserDetails(oAuth2User.getAttributes());
         }
         Platform platform = null;
         String providerId = oAuth2UserInfo.getProviderId();
@@ -47,6 +51,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         switch(providerId){
             case "google":
                 platform=Platform.GOOGLE;
+                break;
             case "kakao" :
                 platform=Platform.KAKAO;
         }
