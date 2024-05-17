@@ -29,6 +29,7 @@ import vivio.spring.web.dto.PerColResponseDTO;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -206,46 +207,50 @@ public class PersonalColorCommandServiceImpl implements PersonalColorCommandServ
 
 
     }
-    @Override
+   @Override
     @Transactional
     public PerColResponseDTO.JoinResponseDTO JoinPerCol(PerColRequestDTO.PerColJoinDTO request, Long userId, MultipartFile file) throws IOException {
-        //아마존 S3 업로드
+        // 랜덤 파일 이름 생성
         String originalFileName = file.getOriginalFilename();
+        String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+        String randomFileName = UUID.randomUUID().toString() + extension;
 
+        // 아마존 S3 업로드
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
         metadata.setContentType(file.getContentType());
 
-        amazonS3.putObject(bucket,originalFileName,file.getInputStream(),metadata);
-        String image = amazonS3.getUrl(bucket,originalFileName).toString();
+        amazonS3.putObject(bucket, randomFileName, file.getInputStream(), metadata);
+        String image = amazonS3.getUrl(bucket, randomFileName).toString();
 
-        Optional<User> userOptional=userRepository.findById(userId);
-        Gender gender=null;
-        Tone tone=null;
-        Session session =null;
+        Optional<User> userOptional = userRepository.findById(userId);
+        Gender gender = null;
+        Tone tone = null;
+        Session session = null;
         switch(request.getGender()){
             case 1:
-                gender=Gender.male;
+                gender = Gender.male;
                 break;
             case 2:
-                gender=Gender.female;
+                gender = Gender.female;
+                break;
         }
         switch (request.getPersonalColor()){
             case 1:
-                session=Session.spring;
-                tone=Tone.warm;
+                session = Session.spring;
+                tone = Tone.warm;
                 break;
             case 2:
-                session=Session.summer;
-                tone=Tone.cool;
+                session = Session.summer;
+                tone = Tone.cool;
                 break;
             case 3:
-                session=Session.fall;
-                tone=Tone.warm;
+                session = Session.fall;
+                tone = Tone.warm;
                 break;
             case 4:
-                session=Session.winter;
-                tone=Tone.cool;
+                session = Session.winter;
+                tone = Tone.cool;
                 break;
         }
         Optional<Hair> hairOptional = null;
@@ -253,57 +258,55 @@ public class PersonalColorCommandServiceImpl implements PersonalColorCommandServ
         Optional<ColorRecommend> colorRecommendOptional = null;
         switch (session){
             case spring:
-                if(gender==Gender.male){
+                if (gender == Gender.male) {
                     hairOptional = perHairReposiotry.findById(2L);
                     beautyOptional = perBeautyRepository.findById(2L);
                     colorRecommendOptional = perColRecRepository.findById(2L);
-                }else{
-                     hairOptional = perHairReposiotry.findById(6L);
-                     beautyOptional = perBeautyRepository.findById(6L);
+                } else {
+                    hairOptional = perHairReposiotry.findById(6L);
+                    beautyOptional = perBeautyRepository.findById(6L);
                     colorRecommendOptional = perColRecRepository.findById(6L);
                 }
                 break;
             case summer:
-
-                if(gender==Gender.male){
+                if (gender == Gender.male) {
                     hairOptional = perHairReposiotry.findById(3L);
                     beautyOptional = perBeautyRepository.findById(3L);
                     colorRecommendOptional = perColRecRepository.findById(3L);
-                }else{
-                     hairOptional = perHairReposiotry.findById(7L);
-                     beautyOptional = perBeautyRepository.findById(7L);
+                } else {
+                    hairOptional = perHairReposiotry.findById(7L);
+                    beautyOptional = perBeautyRepository.findById(7L);
                     colorRecommendOptional = perColRecRepository.findById(7L);
                 }
                 break;
             case fall:
-
-                if(gender==Gender.male){
+                if (gender == Gender.male) {
                     hairOptional = perHairReposiotry.findById(4L);
                     beautyOptional = perBeautyRepository.findById(4L);
                     colorRecommendOptional = perColRecRepository.findById(4L);
-                }else{
-                     hairOptional = perHairReposiotry.findById(8L);
-                     beautyOptional = perBeautyRepository.findById(8L);
+                } else {
+                    hairOptional = perHairReposiotry.findById(8L);
+                    beautyOptional = perBeautyRepository.findById(8L);
                     colorRecommendOptional = perColRecRepository.findById(8L);
                 }
+                break;
             case winter:
-
-                if(gender==Gender.male){
+                if (gender == Gender.male) {
                     hairOptional = perHairReposiotry.findById(5L);
                     beautyOptional = perBeautyRepository.findById(5L);
                     colorRecommendOptional = perColRecRepository.findById(5L);
-                }else{
-                     hairOptional = perHairReposiotry.findById(9L);
-                     beautyOptional = perBeautyRepository.findById(9L);
+                } else {
+                    hairOptional = perHairReposiotry.findById(9L);
+                    beautyOptional = perBeautyRepository.findById(9L);
                     colorRecommendOptional = perColRecRepository.findById(9L);
                 }
                 break;
         }
-        Hair hair=hairOptional.get();
-        Beauty beauty=beautyOptional.get();
-        ColorRecommend colorRecommend=colorRecommendOptional.get();
-        User user= userOptional.get();
-        PersonalColor newPersonalColor= PerColConverter.toPersonalColor(gender,session,tone,image,hair,beauty,colorRecommend,user);
+        Hair hair = hairOptional.get();
+        Beauty beauty = beautyOptional.get();
+        ColorRecommend colorRecommend = colorRecommendOptional.get();
+        User user = userOptional.get();
+        PersonalColor newPersonalColor = PerColConverter.toPersonalColor(gender, session, tone, image, hair, beauty, colorRecommend, user);
         perColRepository.save(newPersonalColor);
         return PerColConverter.toJoinResponseDTO(newPersonalColor);
     }

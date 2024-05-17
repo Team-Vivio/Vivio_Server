@@ -42,6 +42,7 @@ import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -141,15 +142,18 @@ public class UserCommandServiceImpl implements UserCommandService{
         Optional<User> userOptional = userRepository.findById(userId);
         User user= userOptional.get();
 
-
         String originalFileName = file.getOriginalFilename();
+        String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+        String randomFileName = UUID.randomUUID().toString() + extension;
 
+        // 아마존 S3 업로드
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
         metadata.setContentType(file.getContentType());
 
-        amazonS3.putObject(bucket,originalFileName,file.getInputStream(),metadata);
-        String image = amazonS3.getUrl(bucket,originalFileName).toString();
+        amazonS3.putObject(bucket, randomFileName, file.getInputStream(), metadata);
+        String image = amazonS3.getUrl(bucket, randomFileName).toString();
+
         switch(request.getType()){
             case "top":
                 Top top=UserConverter.toTop(image,user);
