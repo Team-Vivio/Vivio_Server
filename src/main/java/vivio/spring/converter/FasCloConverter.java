@@ -62,6 +62,7 @@ public class FasCloConverter {
     public static FasCloResponseDTO.ViewItemDTO toViewItemDTO(FashionCloset fashionCloset,List<FasCloResponseDTO.ItemDTO> items){
         return FasCloResponseDTO.ViewItemDTO.builder()
                 .id(fashionCloset.getId())
+                .name(fashionCloset.getUser().getName())
                 .items(items)
                 .build();
     }

@@ -111,6 +111,7 @@ public class FasRecConverter {
     public static FasRecResponseDTO.ViewResultDTO toViewResultDTO(FashionRecommand fashionRecommand, List<FasRecResponseDTO.ViewFashionBottomDTO> fashionBottomDTOS,List<FasRecResponseDTO.ViewFashionTopDTO> fashionTopDTOS) {
         return FasRecResponseDTO.ViewResultDTO.builder()
                 .fasRecId(fashionRecommand.getId())
+                .name(fashionRecommand.getUser().getName())
                 .fashionTops(fashionTopDTOS)
                 .fashionBottoms(fashionBottomDTOS)
 

@@ -76,10 +76,11 @@ public class PerColConverter {
                 .tone(personalColor.getTone())
                 .build();
     }
-    public static PerColResponseDTO.ViewResponseDTO toViewResult(String image,Gender gender, Session session, Tone tone, PerColResponseDTO.ViewHairDTO viewHairDTO,PerColResponseDTO.ViewBeautyDTO viewBeautyDTO,PerColResponseDTO.ViewPersonalColorDTO viewPersonalColorDTO){
+    public static PerColResponseDTO.ViewResponseDTO toViewResult(String name ,String image,Gender gender, Session session, Tone tone, PerColResponseDTO.ViewHairDTO viewHairDTO,PerColResponseDTO.ViewBeautyDTO viewBeautyDTO,PerColResponseDTO.ViewPersonalColorDTO viewPersonalColorDTO){
 
         return PerColResponseDTO.ViewResponseDTO.builder()
                 .image(image)
+                .name(name)
                 .gender(gender)
                 .session(session)
                 .tone(tone)

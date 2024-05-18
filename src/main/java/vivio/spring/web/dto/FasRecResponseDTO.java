@@ -42,6 +42,7 @@ public class FasRecResponseDTO {
     @AllArgsConstructor
     public static class ViewResultDTO{
         Long fasRecId;
+        String name;
         List<ViewFashionTopDTO> fashionTops;
         List<ViewFashionBottomDTO> fashionBottoms;
 
