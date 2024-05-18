@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -43,6 +44,7 @@ public class SeaCloCommandServiceImpl implements SeaCloCommandService {
     public  SeaCloResponseDTO.SeaCloListDTO createSeaClo(SeaCloReqeustDTO.createDTO request,MultipartFile file) throws IOException {
         //deleteProductSet("maptraveler","us-east1","product_set_id");
         //importProductsFromCsv();
+        //getProductSet("maptraveler","us-east1","product_set_id");
         String type="";
         switch (request.getType()){
             case "top":
@@ -52,43 +54,88 @@ public class SeaCloCommandServiceImpl implements SeaCloCommandService {
                 type = "bottom";
                 break;
         }
-       return getSimilarProductsFile("maptraveler","us-east1","product_set_id","apparel-v2",file,"category="+type);
+       return getSimilarProductsFile("maptraveler","us-east1","product_set_id_2","apparel-v2",file,"category="+type);
         //return null;
     }
+    public static void getProductSet(String projectId, String computeRegion, String productSetId)
+    throws IOException {
+        GoogleCredentials credentials = GoogleCredentials.fromStream(new ClassPathResource("maptraveler-b8b198d2054d.json").getInputStream());
+        ProductSearchSettings settings = ProductSearchSettings.newBuilder()
+                .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
+                .build();
+      try (ProductSearchClient client = ProductSearchClient.create(settings)) {
+
+    // Get the full path of the product set.
+    String formattedName = ProductSetName.format(projectId, computeRegion, productSetId);
+    // List all the products available in the product set.
+    for (Product product : client.listProductsInProductSet(formattedName).iterateAll()) {
+      // Display the product information
+      System.out.println(String.format("Product name: %s", product.getName()));
+      System.out.println(
+          String.format(
+              "Product id: %s",
+              product.getName().substring(product.getName().lastIndexOf('/') + 1)));
+      System.out.println(String.format("Product display name: %s", product.getDisplayName()));
+      System.out.println(String.format("Product description: %s", product.getDescription()));
+      System.out.println(String.format("Product category: %s", product.getProductCategory()));
+      System.out.println("Product labels: ");
+      for (Product.KeyValue element : product.getProductLabelsList()) {
+        System.out.println(String.format("%s: %s", element.getKey(), element.getValue()));
+      }
+    }
+  }
+}
     public void importProductsFromCsv() throws IOException {
         GoogleCredentials credentials = GoogleCredentials.fromStream(new ClassPathResource("maptraveler-b8b198d2054d.json").getInputStream());
         ProductSearchSettings settings = ProductSearchSettings.newBuilder()
-        .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
-        .build();
+                .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
+                .build();
+
+        List<String> gcsUris = Arrays.asList(
+                "gs://vivi-o/small_products_0.csv",
+                "gs://vivi-o/small_products_1.csv",
+                "gs://vivi-o/small_products_2.csv",
+                "gs://vivi-o/small_products_3.csv",
+                "gs://vivi-o/small_products_4.csv",
+                "gs://vivi-o/small_products_5.csv",
+                "gs://vivi-o/small_products_6.csv",
+                "gs://vivi-o/small_products_7.csv"
+
+        );
+
         try (ProductSearchClient client = ProductSearchClient.create(settings)) {
             String parent = LocationName.of(PROJECT_ID, LOCATION).toString();
             log.info(parent);
-            ImportProductSetsGcsSource gcsSource = ImportProductSetsGcsSource.newBuilder()
-                    .setCsvFileUri(GCS_URI)
-                    .build();
-            ImportProductSetsInputConfig inputConfig = ImportProductSetsInputConfig.newBuilder()
-                    .setGcsSource(gcsSource)
-                    .build();
-            ImportProductSetsRequest request = ImportProductSetsRequest.newBuilder()
-                    .setParent(parent)
-                    .setInputConfig(inputConfig)
-                    .build();
 
-            // Asynchronous request
-            ImportProductSetsResponse response = client.importProductSetsAsync(request).get();
+            for (String gcsUri : gcsUris) {
+                ImportProductSetsGcsSource gcsSource = ImportProductSetsGcsSource.newBuilder()
+                        .setCsvFileUri(gcsUri)
+                        .build();
+                ImportProductSetsInputConfig inputConfig = ImportProductSetsInputConfig.newBuilder()
+                        .setGcsSource(gcsSource)
+                        .build();
+                ImportProductSetsRequest request = ImportProductSetsRequest.newBuilder()
+                        .setParent(parent)
+                        .setInputConfig(inputConfig)
+                        .build();
 
-            log.info("Imported products: ");
-            response.getStatusesList().forEach(status -> {
-                if (status.getCode() == 0) {
-                    log.info("Success: " + status.getMessage());
-                } else {
-                    log.info("Error: " + status.getMessage());
-                }
-            });
-        } catch (Exception e) {
-             log.info("Error importing product sets: " + e.getMessage());
+                // Asynchronous request
+                ImportProductSetsResponse response = client.importProductSetsAsync(request).get();
+
+                log.info("Imported products from: " + gcsUri);
+                response.getStatusesList().forEach(status -> {
+                    if (status.getCode() == 0) {
+                        log.info("Success: " + status.getMessage());
+                    } else {
+                        log.info("Error: " + status.getMessage());
+                    }
+                });
+            }
+        } catch (InterruptedException e) {
+            log.info("Error importing product sets: " + e.getMessage());
             throw new IOException(e);
-
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
     public static File convertMultipartFileToFile(MultipartFile multipartFile) throws IOException {
