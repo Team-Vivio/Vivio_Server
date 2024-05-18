@@ -75,7 +75,12 @@ public class FasCloCommandServiceImpl implements FasCloCommandService{
 
         List<FasCloResponseDTO.CreateItemDTO> results=MatchingFashion(fasCloItems);
 
-        return FasCloConverter.toCreateDTO(results);
+        if (results.size() > 18) {
+            Collections.shuffle(results);
+            results = results.subList(0, 18);
+        }
+
+    return FasCloConverter.toCreateDTO(results);
     }
     public List<FasCloResponseDTO.CreateItemDTO> MatchingFashion(List<FasCloResponseDTO.FasCloItems> fasCloItems) throws IOException {
         log.info("Matching Fashion");
