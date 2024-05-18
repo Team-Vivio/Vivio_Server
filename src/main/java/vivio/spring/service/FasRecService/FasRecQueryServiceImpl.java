@@ -75,6 +75,7 @@ public class FasRecQueryServiceImpl implements FasRecQueryService {
     }
     @Override
     public FasRecResponseDTO.ViewResultDTO ViewFasRecResult(FashionRecommand fashionRecommand){
+
        List<FashionTop> fashionTops=fasTopRepository.findAllByFashionRecommandId(fashionRecommand.getId());
        List<FashionBottom> fashionBottoms=fasBottomRepository.findAllByFashionRecommandId(fashionRecommand.getId());
        List<FasRecResponseDTO.ViewFashionTopDTO> fashionTopDTOS=fashionTops.stream()

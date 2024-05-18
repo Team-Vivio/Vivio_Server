@@ -69,6 +69,6 @@ public class PersonalColorQueryServiceImpl implements PersonalColorQueryService 
         PerColResponseDTO.ViewHairDTO viewHairDTO= PerColConverter.toViewHairDTO(hair,colorHair);
         PerColResponseDTO.ViewPersonalColorDTO viewPersonalColorDTO=PerColConverter.toViewPersonalColorDTO(colorRecommend,colorRecommands);
         PerColResponseDTO.ViewBeautyDTO viewBeautyDTO=PerColConverter.toViewBeautyDTO(beauty);
-        return PerColConverter.toViewResult(personalColor.getImage(),personalColor.getGender(),personalColor.getSession(),personalColor.getTone(),viewHairDTO,viewBeautyDTO,viewPersonalColorDTO);
+        return PerColConverter.toViewResult(personalColor.getUser().getName(),personalColor.getImage(),personalColor.getGender(),personalColor.getSession(),personalColor.getTone(),viewHairDTO,viewBeautyDTO,viewPersonalColorDTO);
     }
 }

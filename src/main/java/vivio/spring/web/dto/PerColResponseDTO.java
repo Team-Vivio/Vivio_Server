@@ -96,6 +96,7 @@ public class PerColResponseDTO {
     @AllArgsConstructor
     public static class ViewResponseDTO {
         String image;
+        String name;
        Gender gender;
        Session session;
        Tone tone;

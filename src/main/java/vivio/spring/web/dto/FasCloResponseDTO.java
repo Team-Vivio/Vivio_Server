@@ -81,6 +81,7 @@ public class FasCloResponseDTO {
     @AllArgsConstructor
     public static class ViewItemDTO{
         Long id;
+        String name;
         List<ItemDTO> items;
     }
     @Builder
