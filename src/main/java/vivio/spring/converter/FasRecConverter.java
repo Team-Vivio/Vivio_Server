@@ -74,6 +74,7 @@ public class FasRecConverter {
     public static FasRecResponseDTO.JoinResultDTO toJoinResultDTO(FashionRecommand fashionRecommand) {
         return FasRecResponseDTO.JoinResultDTO.builder()
                 .fasRecId(fashionRecommand.getId())
+                .name(fashionRecommand.getUser().getName())
                 .createdAt(fashionRecommand.getCreatedAt())
                 .build();
     }

@@ -27,6 +27,7 @@ public class FasCloConverter {
     public static FasCloResponseDTO.FasCloJoinDTO toJoin(FashionCloset fashionCloset){
         return FasCloResponseDTO.FasCloJoinDTO.builder()
                 .id(fashionCloset.getId())
+                .name(fashionCloset.getUser().getName())
                 .createdAt(fashionCloset.getCreatedAt())
                 .build();
     }

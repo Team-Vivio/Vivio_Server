@@ -57,6 +57,7 @@ public class FasCloResponseDTO {
     @AllArgsConstructor
     public static class FasCloJoinDTO{
         Long id;
+        String name;
         LocalDateTime createdAt;
     }
     @Builder

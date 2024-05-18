@@ -60,6 +60,7 @@ public class PerColConverter {
     public static PerColResponseDTO.JoinResponseDTO toJoinResponseDTO(PersonalColor personalColor){
         return PerColResponseDTO.JoinResponseDTO.builder()
                 .PerColId(personalColor.getId())
+                .name(personalColor.getUser().getName())
                 .createdAt(personalColor.getCreatedAt())
                 .build();
     }

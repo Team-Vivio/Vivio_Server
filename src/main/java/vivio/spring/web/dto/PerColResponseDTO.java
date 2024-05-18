@@ -19,6 +19,7 @@ public class PerColResponseDTO {
     @AllArgsConstructor
     public static class JoinResponseDTO {
         Long PerColId;
+        String name;
         LocalDateTime createdAt;
 
     }

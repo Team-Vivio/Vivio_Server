@@ -17,6 +17,7 @@ public class FasRecResponseDTO {
     @AllArgsConstructor
     public static class JoinResultDTO{
         Long fasRecId;
+        String name;
         LocalDateTime createdAt;
     }
     @Builder
