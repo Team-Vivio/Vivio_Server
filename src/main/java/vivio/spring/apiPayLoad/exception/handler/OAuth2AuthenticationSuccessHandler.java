@@ -33,6 +33,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         response.addCookie(cookie);
 
         // 프론트엔드 URL로 리디렉션
-        response.sendRedirect("http://www.vivi-o.site");
+        response.sendRedirect("https://www.vivi-o.site");
     }
 }
