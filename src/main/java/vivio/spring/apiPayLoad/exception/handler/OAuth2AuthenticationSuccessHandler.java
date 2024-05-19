@@ -36,7 +36,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         }
 
         // 새로운 토큰을 쿠키에 저장
-        Cookie cookie = new Cookie("token", token);
+        Cookie cookie = new Cookie("socialToken", token);
         cookie.setHttpOnly(true); // XSS 공격 방지를 위해 HttpOnly 설정
         cookie.setSecure(request.isSecure()); // HTTPS를 통해서만 전송되도록 설정 (프로덕션 환경에서 권장)
         cookie.setPath("/"); // 쿠키의 유효 경로 설정
