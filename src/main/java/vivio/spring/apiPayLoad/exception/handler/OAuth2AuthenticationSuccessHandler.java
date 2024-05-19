@@ -26,9 +26,10 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         // 토큰을 쿠키에 저장
         Cookie cookie = new Cookie("token", token);
         cookie.setHttpOnly(true); // XSS 공격 방지를 위해 HttpOnly 설정
-        cookie.setSecure(true); // HTTPS를 통해서만 전송되도록 설정 (프로덕션 환경에서 권장)
+        cookie.setSecure(request.isSecure()); // HTTPS를 통해서만 전송되도록 설정 (프로덕션 환경에서 권장)
         cookie.setPath("/"); // 쿠키의 유효 경로 설정
         cookie.setMaxAge(3600); // 쿠키의 유효 기간 설정 (초 단위, 여기서는 1시간)
+        cookie.setDomain("vivi-o.site"); // 쿠키 도메인 설정
 
         response.addCookie(cookie);
 
