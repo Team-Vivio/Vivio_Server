@@ -22,8 +22,20 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String token = jwtTokenProvider.createToken(authentication);
+        System.out.println("Generated Token: " + token); // 디버그용 로그
 
-        // 토큰을 쿠키에 저장
+        // 기존에 동일한 이름의 쿠키가 있는지 확인
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if ("token".equals(c.getName())) {
+                    c.setMaxAge(0); // 기존 쿠키 삭제
+                    response.addCookie(c);
+                }
+            }
+        }
+
+        // 새로운 토큰을 쿠키에 저장
         Cookie cookie = new Cookie("token", token);
         cookie.setHttpOnly(true); // XSS 공격 방지를 위해 HttpOnly 설정
         cookie.setSecure(request.isSecure()); // HTTPS를 통해서만 전송되도록 설정 (프로덕션 환경에서 권장)
