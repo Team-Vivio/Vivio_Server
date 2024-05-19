@@ -22,28 +22,18 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String token = jwtTokenProvider.createToken(authentication);
-        System.out.println("Generated Token: " + token); // 디버그용 로그
 
-        // 기존에 동일한 이름의 쿠키가 있는지 확인
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if ("token".equals(c.getName())) {
-                    c.setMaxAge(0); // 기존 쿠키 삭제
-                    response.addCookie(c);
-                }
-            }
-        }
+
 
         // 새로운 토큰을 쿠키에 저장
         Cookie cookie = new Cookie("socialToken", token);
         cookie.setHttpOnly(true); // XSS 공격 방지를 위해 HttpOnly 설정
-        cookie.setSecure(request.isSecure()); // HTTPS를 통해서만 전송되도록 설정 (프로덕션 환경에서 권장)
+        cookie.setSecure(false); // HTTP에서도 쿠키를 전송하도록 설정 (개발/테스트 환경에서만 사용)
         cookie.setPath("/"); // 쿠키의 유효 경로 설정
         cookie.setMaxAge(3600); // 쿠키의 유효 기간 설정 (초 단위, 여기서는 1시간)
-        cookie.setDomain("www.vivi-o.site"); // 쿠키 도메인 설정
+        cookie.setDomain("vivi-o.site"); // 쿠키 도메인 설정
 
-        response.addCookie(cookie);
+        response.addCookie(cookie); // 쿠키를 응답에 추가
 
         // 프론트엔드 URL로 리디렉션
         response.sendRedirect("https://www.vivi-o.site");
