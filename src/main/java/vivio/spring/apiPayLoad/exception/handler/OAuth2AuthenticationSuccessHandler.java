@@ -35,15 +35,9 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         // 클라이언트 도메인에 따라 리디렉션 URL 설정
         String clientDomain = request.getHeader("Origin");
-        String redirectUrl;
 
-        if (clientDomain != null && clientDomain.contains("localhost")) {
-            redirectUrl = "http://localhost:3000";
-        } else {
-            redirectUrl = "https://www.vivi-o.site";
-        }
 
         // 프론트엔드 URL로 리디렉션
-        response.sendRedirect(redirectUrl);
+        response.sendRedirect("http://localhost:3000");
     }
 }
