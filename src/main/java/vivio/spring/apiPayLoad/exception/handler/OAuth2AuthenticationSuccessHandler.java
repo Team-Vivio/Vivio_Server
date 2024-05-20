@@ -23,8 +23,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String token = jwtTokenProvider.createToken(authentication);
 
-
-
         // 새로운 토큰을 쿠키에 저장
         Cookie cookie = new Cookie("socialToken", token);
         cookie.setHttpOnly(true); // XSS 공격 방지를 위해 HttpOnly 설정
@@ -35,7 +33,17 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         response.addCookie(cookie); // 쿠키를 응답에 추가
 
+        // 클라이언트 도메인에 따라 리디렉션 URL 설정
+        String clientDomain = request.getHeader("Origin");
+        String redirectUrl;
+
+        if (clientDomain != null && clientDomain.contains("localhost")) {
+            redirectUrl = "http://localhost:3000";
+        } else {
+            redirectUrl = "https://www.vivi-o.site";
+        }
+
         // 프론트엔드 URL로 리디렉션
-        response.sendRedirect("https://www.vivi-o.site");
+        response.sendRedirect(redirectUrl);
     }
 }
