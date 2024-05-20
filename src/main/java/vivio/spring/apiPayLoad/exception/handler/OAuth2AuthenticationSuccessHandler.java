@@ -33,14 +33,8 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         response.addCookie(cookie); // 쿠키를 응답에 추가
 
-        // 클라이언트 도메인에 따라 리디렉션 URL 설정
-        String clientDomain = request.getHeader("Origin");
 
-        // 프론트엔드 URL로 리디렉션
-        if (clientDomain != null && clientDomain.contains("vivi-o.site")) {
-            response.sendRedirect(clientDomain);
-        } else {
-            response.sendRedirect("https://www.vivi-o.site");
-        }
+        response.sendRedirect("https://www.vivi-o.site");
+
     }
 }
