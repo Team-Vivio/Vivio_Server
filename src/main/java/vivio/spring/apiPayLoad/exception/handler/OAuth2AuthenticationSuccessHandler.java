@@ -29,15 +29,18 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         cookie.setSecure(false); // HTTP에서도 쿠키를 전송하도록 설정 (개발/테스트 환경에서만 사용)
         cookie.setPath("/"); // 쿠키의 유효 경로 설정
         cookie.setMaxAge(3600); // 쿠키의 유효 기간 설정 (초 단위, 여기서는 1시간)
-        cookie.setDomain("vivi-o.site"); // 쿠키 도메인 설정
+        cookie.setDomain("localhost"); // 쿠키 도메인 설정
 
         response.addCookie(cookie); // 쿠키를 응답에 추가
 
         // 클라이언트 도메인에 따라 리디렉션 URL 설정
         String clientDomain = request.getHeader("Origin");
 
-
         // 프론트엔드 URL로 리디렉션
-        response.sendRedirect("https://www.vivi-o.site");
+        if (clientDomain != null && clientDomain.contains("vivi-o.site")) {
+            response.sendRedirect(clientDomain);
+        } else {
+            response.sendRedirect("http://localhost:3000");
+        }
     }
 }
