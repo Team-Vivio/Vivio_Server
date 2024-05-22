@@ -5,22 +5,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import vivio.spring.apiPayLoad.exception.handler.OAuth2AuthenticationSuccessHandler;
+import vivio.spring.apiPayLoad.exception.handler.OAuth2AuthorizationFailureHandler;
 import vivio.spring.service.UserService.CustomOauth2UserService;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -54,10 +55,11 @@ public class SecurityConfig {
         http.oauth2Login(oauth2Login -> oauth2Login
                 .loginPage("/oauth-login/login")
                 .defaultSuccessUrl("/oauth-login/success", true)
-                .failureUrl("/oauth-login/login")
+                .failureUrl("/oauth-login/failure")
                 .userInfoEndpoint(userInfoEndpoint ->
                         userInfoEndpoint.userService(customOauth2UserService))
                 .successHandler(oAuth2AuthenticationSuccessHandler())
+                .failureHandler(oAuth2AuthorizationFailureHandler())
                 .permitAll());
 
         http.logout(logout -> logout.logoutUrl("/oauth-login/logout"));
@@ -67,6 +69,10 @@ public class SecurityConfig {
     @Bean
     public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
         return new OAuth2AuthenticationSuccessHandler(jwtTokenProvider);
+    }
+    @Bean
+    public AuthenticationFailureHandler oAuth2AuthorizationFailureHandler(){
+        return new OAuth2AuthorizationFailureHandler();
     }
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
