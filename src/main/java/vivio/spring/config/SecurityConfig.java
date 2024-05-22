@@ -44,23 +44,23 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-   @Bean
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.csrf(csrf -> csrf.disable());
+
         http.authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests.anyRequest().permitAll());
 
-        http.oauth2Login(auth -> auth
+        http.oauth2Login(oauth2Login -> oauth2Login
                 .loginPage("/oauth-login/login")
                 .defaultSuccessUrl("/oauth-login/success", true)
                 .failureUrl("/oauth-login/login")
-                .userInfoEndpoint()
-                .userService(customOauth2UserService)
-                .and()
+                .userInfoEndpoint(userInfoEndpoint ->
+                        userInfoEndpoint.userService(customOauth2UserService))
                 .successHandler(oAuth2AuthenticationSuccessHandler())
                 .permitAll());
 
-        http.logout(auth -> auth.logoutUrl("/oauth-login/logout"));
+        http.logout(logout -> logout.logoutUrl("/oauth-login/logout"));
 
         return http.build();
     }
