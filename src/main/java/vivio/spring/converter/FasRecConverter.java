@@ -1,5 +1,6 @@
 package vivio.spring.converter;
 
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import vivio.spring.domain.FashionColor;
 import vivio.spring.domain.FashionRecommand;
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static ch.qos.logback.classic.spi.ThrowableProxyVO.build;
-
+@Slf4j
 public class FasRecConverter {
     public static FashionRecommand toFashionRecommand(FasRecRequestDTO.JoinDTO request) {
         Gender gender = null;
@@ -119,9 +120,10 @@ public class FasRecConverter {
                 .build();
     }
     public static FasRecResponseDTO.NaverItemDTO toItem(JSONObject item){
+        log.info("아이템: "+String.valueOf(item));
         return FasRecResponseDTO.NaverItemDTO.builder()
                 .title(item.get("title").toString())
-                .image(item.get("image").toString())
+                .image(item.get("thumbnail").toString())
                 .link(item.get("link").toString())
 
                 .build();

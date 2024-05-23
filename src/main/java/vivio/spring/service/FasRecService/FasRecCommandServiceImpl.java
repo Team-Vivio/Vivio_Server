@@ -266,17 +266,20 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
         //상의 추천 반복해서 쇼핑몰 매핑
         List<FasRecResponseDTO.ViewFashionTopDTO> createFashionTopResultDTOS= (List<FasRecResponseDTO.ViewFashionTopDTO>) fashionTops.stream()
                 .map(fahsionTop ->{
+
                     JSONObject fashionTopObject=(JSONObject) fahsionTop;
                     log.info(String.valueOf(headers.get("X-Naver-Client-Id")));
                      ResponseEntity<String> responseEntity =
-                        rest.exchange("https://openapi.naver.com/v1/search/shop.json?query="+finalGenderName +" "+fashionTopObject.get("color")+" "+fashionTopObject.get("type"),
+                        rest.exchange("https://openapi.naver.com/v1/search/image.json?query="+finalGenderName +" "+fashionTopObject.get("color")+" "+fashionTopObject.get("type"),
                                 HttpMethod.GET, requestEntity, String.class);
                     HttpStatus httpStatus = (HttpStatus) responseEntity.getStatusCode();
                     int status=httpStatus.value();
                     String response= responseEntity.getBody();
                     try {
                         JSONObject itemObject= (JSONObject) jsonParser.parse(response);
+                        log.info(String.valueOf(itemObject));
                         JSONArray items= (JSONArray) itemObject.get("items");
+                        log.info(String.valueOf(items));
                         JSONObject item = (JSONObject) items.get(0);
                         FasRecResponseDTO.NaverItemDTO naverItem = FasRecConverter.toItem(item);
                          return (FasRecResponseDTO.ViewFashionTopDTO) FasRecConverter.toFashionTopDTO(fashionTopObject,naverItem);
@@ -291,7 +294,7 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
                 .map(fahsionBottom ->{
                     JSONObject fashionBottomObject=(JSONObject) fahsionBottom;
                      ResponseEntity<String> responseEntity =
-                        rest.exchange("https://openapi.naver.com/v1/search/shop.json?query="+ finalGenderName +" "+fashionBottomObject.get("color")+" "+fashionBottomObject.get("type"),
+                        rest.exchange("https://openapi.naver.com/v1/search/image.json?query="+ finalGenderName +" "+fashionBottomObject.get("color")+" "+fashionBottomObject.get("type"),
                                 HttpMethod.GET, requestEntity, String.class);
                     HttpStatus httpStatus = (HttpStatus) responseEntity.getStatusCode();
                     int status=httpStatus.value();
