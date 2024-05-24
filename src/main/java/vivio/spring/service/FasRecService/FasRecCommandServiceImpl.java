@@ -151,6 +151,9 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
         String genderName=null;
         Gender gender = null;
         Type type = null;
+        //
+
+
         switch (request.getGender()){
             case 1:
                 gender = Gender.male;
@@ -339,7 +342,7 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
         int r = Integer.parseInt(hexCode.substring(1, 3), 16);
         int g = Integer.parseInt(hexCode.substring(3, 5), 16);
         int b = Integer.parseInt(hexCode.substring(5, 7), 16);
-
+        log.info(r + " " + g + " " + b);
         // 색상 계열을 결정하는 로직
         if (r > 200 && g < 100 && b < 100) {
             return "빨간색";
@@ -349,6 +352,8 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
             return "파란색";
         } else if (r > 200 && g > 200 && b < 100) {
             return "노란색";
+        } else if (r > 200 && g > 100 && g < 200 && b < 100) {
+            return "주황색";
         } else if (r > 100 && g < 100 && b > 100) {
             return "보라색";
         } else if (r < 100 && g > 100 && b > 100) {
@@ -357,6 +362,14 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
             return "하얀색";
         } else if (r < 100 && g < 100 && b < 100) {
             return "검정색";
+        } else if (r > 100 && g > 100 && b > 100) {
+            return "회색";
+        } else if (r > 200 && g < 200 && b > 200) {
+            return "핑크색";
+        } else if (r < 200 && g > 200 && b < 200) {
+            return "연두색";
+        } else if (r < 200 && g < 200 && b > 200) {
+            return "하늘색";
         } else {
             return "Other";
         }
