@@ -173,17 +173,21 @@ public class FasRecCommandServiceImpl implements FasRecCommandService{
                 break;
         }
         if(image!= null) {
-            Map<String, Object> bodyMap = new HashMap<>();
-            bodyMap.put("image", image);
-            bodyMap.put("gender", gender);
-            bodyMap.put("token", fitToken);
-            Mono<Double> fatPercentage = webClient.post()
-                    .bodyValue(bodyMap)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .map(jsonString -> parseFatFromJson(jsonString));
-            //체지방률 받아옴
-            fatPercent = fatPercentage.block();
+            try {
+                Map<String, Object> bodyMap = new HashMap<>();
+                bodyMap.put("image", image);
+                bodyMap.put("gender", gender);
+                bodyMap.put("token", fitToken);
+                Mono<Double> fatPercentage = webClient.post()
+                        .bodyValue(bodyMap)
+                        .retrieve()
+                        .bodyToMono(String.class)
+                        .map(jsonString -> parseFatFromJson(jsonString));
+                //체지방률 받아옴
+                fatPercent = fatPercentage.block();
+            }catch (Exception e){
+                fatPercent=null;
+            }
         }else{
             fatPercent = null;
         }
