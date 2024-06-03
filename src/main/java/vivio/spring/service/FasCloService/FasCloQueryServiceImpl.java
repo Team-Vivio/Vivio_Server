@@ -33,12 +33,17 @@ public class FasCloQueryServiceImpl implements FasCloQueryService {
     @Transactional
     public FasCloResponseDTO.ViewListResultDTO viewList(Long userId){
         Optional<User> userOptional= userRepository.findById(userId);
+        log.info(String.valueOf(userId));
         User user=userOptional.get();
         List<FashionCloset> fashionClosets= fasCloRepository.findAllByUser(user, Sort.by(Sort.Direction.DESC, "createdAt"));
+
         List<FasCloResponseDTO.ViewListItemDTO> items= fashionClosets.stream().map(
                 fashionCloset -> {
+                        log.info("옷장번호 "+String.valueOf(fashionCloset.getId()));
                         Optional<FashionClosetFashionStyle>fashionClosetFashionStyleOptional= fasCloFasStyRepository.findFirstByFashionCloset(fashionCloset);
-                        FashionClosetFashionStyle fashionClosetFashionStyle= fashionClosetFashionStyleOptional.get();
+
+                        FashionClosetFashionStyle fashionClosetFashionStyle = fashionClosetFashionStyleOptional.get();
+
                         return FasCloConverter.toViewListItem(fashionClosetFashionStyle);
 
                 }
