@@ -28,7 +28,7 @@ public class FasCloRestController {
     private final TokenProvider tokenProvider;
     @PostMapping("")
     ApiResponse<FasCloResponseDTO.CreateDTO> create(@RequestPart(value ="request", required = true) @Valid FasCloRequestDTO.CrateRequestDTO request, @RequestPart(value="top",required = true) @Valid List<MultipartFile> tops,@RequestPart(value="bottom",required = true) @Valid List<MultipartFile> bottoms,@RequestPart(value="outer",required = false) @Valid List<MultipartFile> outers) throws IOException {
-
+        log.info("실행");
         return ApiResponse.onSuccess(fasCloCommandService.createFasClo(request,tops,bottoms,outers));
     }
     @PostMapping("/closet")

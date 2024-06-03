@@ -66,7 +66,7 @@ public class FasCloCommandServiceImpl implements FasCloCommandService{
     @Override
     @Transactional
     public FasCloResponseDTO.CreateDTO createFasClo(FasCloRequestDTO.CrateRequestDTO request, List<MultipartFile> tops, List<MultipartFile> bottoms, List<MultipartFile> outers) throws IOException {
-
+        log.info("실행2");
         List<FasCloResponseDTO.FasTagItemDTO> topFasItems = toFasCloItems(tops);
         List<FasCloResponseDTO.FasTagItemDTO> bottomFasItems = toFasCloItems(bottoms);
         List<FasCloResponseDTO.FasTagItemDTO> outerFasItems = toFasCloItems(outers);
@@ -79,7 +79,7 @@ public class FasCloCommandServiceImpl implements FasCloCommandService{
             Collections.shuffle(results);
             results = results.subList(0, 18);
         }
-
+    log.info("끝");
     return FasCloConverter.toCreateDTO(results);
     }
     public List<FasCloResponseDTO.CreateItemDTO> MatchingFashion(List<FasCloResponseDTO.FasCloItems> fasCloItems) throws IOException {

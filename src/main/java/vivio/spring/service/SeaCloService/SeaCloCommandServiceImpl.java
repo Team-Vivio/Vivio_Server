@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -223,16 +224,30 @@ public class SeaCloCommandServiceImpl implements SeaCloCommandService {
 
         List<ProductSearchResults.Result> similarProducts =
             response.getResponses(0).getProductSearchResults().getResultsList();
-        List<SeaCloResponseDTO.SeaCloItemDTO> items=similarProducts.stream()
-                          .map(product->{
-                              String productIdPath = product.getProduct().getName();
-                              String[] parts = productIdPath.split("/");
-                              String itemId = parts[parts.length - 1];
-                              Optional<ItemList> itemListOptional=  itemListReposiotroy.findByTitle(itemId);
-                              ItemList itemList=itemListOptional.get();
+          List<SeaCloResponseDTO.SeaCloItemDTO> items = similarProducts.stream()
+                  .map(product -> {
+                      try {
+                          log.info("1");
+                          String productIdPath = product.getProduct().getName();
+                          String[] parts = productIdPath.split("/");
+                          String itemId = parts[parts.length - 1];
+                          Optional<ItemList> itemListOptional = itemListReposiotroy.findByTitle(itemId);
 
-                              return SeaCloConverter.toSeaCloItemDTO(itemList.getPrice(),itemId,itemList.getImage(),itemList.getUrl());
-                          }).collect(Collectors.toList());
+                          // 예외 처리: itemListOptional이 비어있는 경우 처리
+                          if (!itemListOptional.isPresent()) {
+                              return null;
+                          }
+
+                          ItemList itemList = itemListOptional.get();
+                          return SeaCloConverter.toSeaCloItemDTO(itemList.getPrice(), itemId, itemList.getImage(), itemList.getUrl());
+                      } catch (Exception e) {
+                          // 예외 처리: 로그 출력
+                          log.error("Error processing product: " + product.getProduct().getName(), e);
+                          return null; // null을 반환하여 나중에 필터링
+                      }
+                  })
+                  .filter(Objects::nonNull) // null이 아닌 항목만 필터링
+                  .collect(Collectors.toList());
 //        log.info("Similar Products: ");
 //        for (ProductSearchResults.Result product : similarProducts) {
 //            log.info(String.format("\nProduct name: %s", product.getProduct().getName()));
